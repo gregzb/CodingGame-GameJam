@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 class ResourceLoaderScene extends Phaser.Scene {
     constructor(test) {
         super({
@@ -10,6 +12,8 @@ class ResourceLoaderScene extends Phaser.Scene {
         // Register a load progress event to show a load bar
         this.load.on('progress', (value) => {
             progress.clear();
+            progress.fillStyle(0x7f7f7f, 1);
+            progress.fillRect(0, this.sys.game.config.height / 2, this.sys.game.config.width, 60);
             progress.fillStyle(0xffffff, 1);
             progress.fillRect(0, this.sys.game.config.height / 2, this.sys.game.config.width * value, 60);
         });
@@ -22,14 +26,18 @@ class ResourceLoaderScene extends Phaser.Scene {
         });
 
         // Tilemap with a lot of objects and tile-properties tricks
-        this.load.tilemapTiledJSON('map', 'assets/tilemaps/map1/map1.json');
+        this.load.tilemapTiledJSON('map', 'assets/tilemaps/map2/newtestmap.json');
 
-        this.load.spritesheet('tiles', 'assets/tilemaps/map1/TileSet2.png', {
+        /*this.load.spritesheet('tiles', 'assets/tilemaps/map2/Tileset.png', {
             frameWidth: 16,
             frameHeight: 16,
             spacing: 0
-        });
-        }
+        });*/
+
+        this.load.image('tiles', 'assets/tilemaps/map2/Tileset.png');
+
+        this.load.atlas('player', 'assets/spritesheets/mortmort/spritesheet.png', 'assets/spritesheets/mortmort/spritesheet.json');
+    }
 }
 
 export default ResourceLoaderScene;

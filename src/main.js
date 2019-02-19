@@ -1,4 +1,4 @@
-import 'phaser';
+import Phaser from 'phaser';
 import './styles/styles.css';
 import ResourceLoaderScene from './scenes/ResourceLoaderScene';
 import GameScene from './scenes/GameScene';
@@ -17,7 +17,11 @@ const config = {
             gravity: {
                 y: 800
             },
+            fps: 200,
             debug: false
+            // debug: true,
+            // debugShowBody: true,
+            // debugShowStaticBody: true
         }
     },
     scene: [
