@@ -15,7 +15,12 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
+        this.registry.set('updateViewport', () => this.updateViewport());
+
         this.cam = this.cameras.main;
+
+        this.cam.roundPixels = true;
+        this.cam.setViewport(600, 0, 200, 600);
 
         this.map = this.make.tilemap({
             key: 'map'
@@ -30,10 +35,17 @@ class GameScene extends Phaser.Scene {
 
         // Probably not the correct way of doing this:
         this.physics.world.bounds.width = this.groundLayer.width;
+        this.physics.world.bounds.height = this.groundLayer.height * 2;
+        this.physics.world.bounds.y -= 100;
 
-        this.physics.world.TILE_BIAS = 96;
+        /*const debugGraphics = this.add.graphics().setAlpha(0.6);
+        this.groundLayer.renderDebug(debugGraphics, {
+            tileColor: null, // Color of non-colliding tiles
+            collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
+            faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
+        });*/
 
-        this.physics.world.resume();
+        //this.physics.world.resume();
 
         this.keys = {
             jump: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
@@ -44,13 +56,9 @@ class GameScene extends Phaser.Scene {
             down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
         };
 
-        //cam.centerOn(750,300);
-        //this.cam.setScroll(-300,0);
 
-        this.playerSprite = new Player({ scene: this, x: 50, y: -100, texture: 'player', frame: 'MortMortSprite-1.png' });
+        this.playerSprite = new Player({ scene: this, x: 0, y: -100, texture: 'player', frame: 'MortMortSprite-1.png' });
 
-        //this.camTarget = this.add.zone(this.playerSprite.x, this.playerSprite.y, 1, 1);
-        //this.playerSprite.setScale(1, 1);
         let playerAnimations = {
             idle: this.anims.generateFrameNames('player', {
                 start: 1, end: 1, zeroPad: 0,
@@ -78,41 +86,19 @@ class GameScene extends Phaser.Scene {
         //this.cam.zoomTo(1, 0);
         this.cam.setBackgroundColor(0x7fbfff);
 
+        // This will watch the player and worldLayer every frame to check for collisions
+        this.physics.add.collider(this.playerSprite, this.groundLayer);
+
         this.cam.centerOn(0, 0);
         this.cam.startFollow(this.playerSprite, true, 0.25, 0.25);
     }
 
     update(time, delta) {
         this.playerSprite.updateSprite(this.keys, time, delta);
-        this.physics.collide(this.playerSprite, this.groundLayer, this.playerCollision);
-
-
-
-        /*if (this.cam.scrollX > 600) {
-            this.cam.scrollX = -300;
-            this.playerSprite.x = 100;
-            this.playerSprite.y = 0;
-            this.playerSprite.body.velocity = new Phaser.Math.Vector2(250,0);
-        }*/
     }
 
-    playerCollision(obj1, obj2) {
-        let objs = [obj1, obj2];
-
-        for (const obj of objs) {
-            if (obj.type === "Sprite") {
-                if (obj.body.blocked.down) {
-                    if (obj.jumping) {
-                        if (obj.running) {
-                            obj.anims.play("run");
-                        } else {
-                            obj.anims.play("idle");
-                        }
-                    }
-                    obj.jumping = false;
-                }
-            }
-        }
+    updateViewport() {
+        this.cam.setViewport(this.registry.get('divider'), 0, 800-this.registry.get('divider'), 600);
     }
 }
 

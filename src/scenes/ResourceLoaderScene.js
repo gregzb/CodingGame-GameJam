@@ -22,7 +22,7 @@ class ResourceLoaderScene extends Phaser.Scene {
         this.load.on('complete', () => {
             // prepare all animations, defined in a separate file
             progress.destroy();
-            this.scene.start('GameScene');
+            this.scene.start('EditorScene');
         });
 
         // Tilemap with a lot of objects and tile-properties tricks
@@ -37,6 +37,8 @@ class ResourceLoaderScene extends Phaser.Scene {
         this.load.image('tiles', 'assets/tilemaps/map2/Tileset.png');
 
         this.load.atlas('player', 'assets/spritesheets/mortmort/spritesheet.png', 'assets/spritesheets/mortmort/spritesheet.json');
+
+        this.load.image('editorUI', 'assets/images/EditorUI.png');
     }
 }
 
