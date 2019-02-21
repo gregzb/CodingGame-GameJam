@@ -1,0 +1,12 @@
+{
+    "offsetX": 0,
+    "offsetY": 19,
+    "initX": 227,
+    "initY": 227,
+    "buttons": [
+        {"name": "movementButton"},
+        {"name": "clockButton"},
+        {"name": "actionButton"},
+        {"name": "attackButton"}
+    ]
+}

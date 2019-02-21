@@ -1,0 +1,56 @@
+{
+    "blockData": [
+        {
+            "type": "Movement",
+            "blocks": [
+                {
+                    "type": "Movement",
+                    "name": "moveForwardTimed",
+                    "description": "The player will move forward in the current direction for X seconds.",
+                    "numInputs": 1,
+                    "prefix": "Move forward ",
+                    "input": "float",
+                    "suffix": " s"
+                }
+            ]
+        },
+        {
+            "type": "Control",
+            "blocks": [
+                {
+                    "type": "Control",
+                    "name": "delay",
+                    "description": "The game will wait for X seconds before executing the next block.",
+                    "numInputs": 1,
+                    "prefix": "Wait ",
+                    "input": "float",
+                    "suffix": " s"
+                }
+            ]
+        },
+        {
+            "type": "Action",
+            "blocks": [
+                {
+                    "type": "Action",
+                    "name": "pickUpItem",
+                    "description": "The player will pick up the item next to the character.",
+                    "numInputs": 0,
+                    "prefix": "Pick Up Item"
+                }
+            ]
+        },
+        {
+            "type": "Attack",
+            "blocks": [
+                {
+                    "type": "Attack",
+                    "name": "fireball",
+                    "description": "The player will shoot a fireball.",
+                    "numInputs": 0,
+                    "prefix": "Shoot Fireball"
+                }
+            ]
+        }
+    ]
+}

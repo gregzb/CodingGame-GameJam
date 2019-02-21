@@ -39,6 +39,15 @@ class ResourceLoaderScene extends Phaser.Scene {
         this.load.atlas('player', 'assets/spritesheets/mortmort/spritesheet.png', 'assets/spritesheets/mortmort/spritesheet.json');
 
         this.load.image('editorUI', 'assets/images/EditorUI.png');
+
+        this.load.bitmapFont('default', 'assets/fonts/font0/font0.png', 'assets/fonts/font0/font0.fnt');
+
+        this.load.image('movementButton', 'assets/images/buttons/Movement.png');
+        this.load.image('clockButton', 'assets/images/buttons/Clock.png');
+        this.load.image('actionButton', 'assets/images/buttons/Action.png');
+        this.load.image('attackButton', 'assets/images/buttons/Attack.png');
+
+        this.load.image('movementBlock', 'assets/images/MovementBlock1Input.png');
     }
 }
 
