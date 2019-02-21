@@ -1,8 +1,8 @@
 {
     "offsetX": 0,
     "offsetY": 19,
-    "initX": 227,
-    "initY": 227,
+    "initX": 8,
+    "initY": 8,
     "buttons": [
         {"name": "movementButton"},
         {"name": "clockButton"},

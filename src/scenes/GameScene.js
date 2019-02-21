@@ -15,6 +15,8 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
+        this.zoom = 4;
+
         this.registry.set('updateViewport', () => this.updateViewport());
 
         this.cam = this.cameras.main;
@@ -82,7 +84,7 @@ class GameScene extends Phaser.Scene {
         this.anims.create({ key: 'dash', frames: playerAnimations.dash, frameRate: 10, repeat: -1 });
         this.anims.create({ key: 'run', frames: playerAnimations.run, frameRate: 10, repeat: -1 });
         this.playerSprite.anims.play('idle');
-        this.cam.zoomTo(4, 0);
+        this.cam.zoomTo(this.zoom, 0);
         //this.cam.zoomTo(1, 0);
         this.cam.setBackgroundColor(0x7fbfff);
 

@@ -1,5 +1,5 @@
-import Button from './Button.js';
-import config from './buttonInfo.json';
+import Button from './CodeBlock.js';
+import blockData from './blockInfo.json';
 
 export default class ButtonManager {
     constructor(scene) {

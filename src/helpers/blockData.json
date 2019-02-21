@@ -8,9 +8,11 @@
                     "name": "moveForwardTimed",
                     "description": "The player will move forward in the current direction for X seconds.",
                     "numInputs": 1,
-                    "prefix": "Move forward ",
+                    "prefix": "Move forward",
                     "input": "float",
-                    "suffix": " s"
+                    "suffix": "seconds",
+                    "defaultX": 90,
+                    "defaultY": 80
                 }
             ]
         },
@@ -22,9 +24,11 @@
                     "name": "delay",
                     "description": "The game will wait for X seconds before executing the next block.",
                     "numInputs": 1,
-                    "prefix": "Wait ",
+                    "prefix": "Wait",
                     "input": "float",
-                    "suffix": " s"
+                    "suffix": "seconds",
+                    "defaultX": 40,
+                    "defaultY": 40
                 }
             ]
         },
@@ -36,7 +40,9 @@
                     "name": "pickUpItem",
                     "description": "The player will pick up the item next to the character.",
                     "numInputs": 0,
-                    "prefix": "Pick Up Item"
+                    "prefix": "Pick Up Item",
+                    "defaultX": 40,
+                    "defaultY": 40
                 }
             ]
         },
@@ -48,7 +54,9 @@
                     "name": "fireball",
                     "description": "The player will shoot a fireball.",
                     "numInputs": 0,
-                    "prefix": "Shoot Fireball"
+                    "prefix": "Shoot Fireball",
+                    "defaultX": 40,
+                    "defaultY": 40
                 }
             ]
         }

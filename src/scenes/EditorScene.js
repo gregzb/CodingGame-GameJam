@@ -4,6 +4,7 @@ import Phaser from 'phaser';
 import ButtonManager from '../helpers/ButtonManager';
 
 import blockData from '../helpers/blockData.json';
+import CodeBlock from '../helpers/CodeBlock';
 
 class EditorScene extends Phaser.Scene {
     constructor(test) {
@@ -18,7 +19,7 @@ class EditorScene extends Phaser.Scene {
 
     create() {
 
-        this.zoom = 4;
+        this.zoom = 1;
 
         this.gameScene = this.scene.launch('GameScene');
         this.cam = this.cameras.main;
@@ -30,9 +31,11 @@ class EditorScene extends Phaser.Scene {
 
         //this.cam.scrollX = 300/this.zoom;
 
-        this.background = this.add.image(300, 300, 'editorUI');
+        this.background = this.add.image(300, 300, 'editorUI').setScale(4);
 
         let buttonManger = new ButtonManager(this);
+
+        let codeBlock = new CodeBlock(this, 300, 300, 'movementBlock', blockData.blockData[0].blocks[0]).setOrigin(0,0).setScale(6);
 
         // this.actionButton = new Button({scene: this, x: 227, y: 227, texture: 'actionButton'});
         // this.actionButton.setOrigin(0, 0);
@@ -48,7 +51,7 @@ class EditorScene extends Phaser.Scene {
         //this.text.setTintFill(0xff0000);
         //this.text.setTintFill(0xff0000);
 
-        this.cam.startFollow(this.background);
+        //this.cam.startFollow(this.background);
 
         this.registry.set('divider', 600);
 
@@ -66,6 +69,7 @@ class EditorScene extends Phaser.Scene {
             this.input.mousePointer.prevPosition.x > 200) {
             this.scaleSize(true);
         }
+        //console.log(this.cam.getWorldPoint(0,0));
         //console.log(this.registry.get('divider'));
     }
 
