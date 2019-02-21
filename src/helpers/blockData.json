@@ -1,64 +1,91 @@
 {
-    "blockData": [
-        {
-            "type": "Movement",
-            "blocks": [
-                {
-                    "type": "Movement",
+    "blockShapes": {
+        "startBlock": {
+            "name": "startBlock",
+            "texture": "startBlock",
+            "prefixOffsetX": 25,
+            "prefixOffsetY": 10,
+            "draggable": false
+        },
+        "zeroInput": {
+            "name": "zeroInput",
+            "texture": "movementBlock",
+            "prefixOffsetX": 25,
+            "prefixOffsetY": 10,
+            "draggable": true
+        },
+        "oneInput": {
+            "name": "oneInput",
+            "texture": "movementBlock",
+            "prefixOffsetX": 25,
+            "prefixOffsetY": 10,
+            "suffixOffsetX": 25,
+            "suffixOffsetY": 60,
+            "inputOffsetX": 18,
+            "inputOffsetY": 32,
+            "draggable": true
+        }
+    },
+    "blockData": {
+        "Movement": {
+                "moveForwardTimed": {
                     "name": "moveForwardTimed",
+                    "shape": "oneInput",
+                    "type": "Movement",
                     "description": "The player will move forward in the current direction for X seconds.",
-                    "numInputs": 1,
                     "prefix": "Move forward",
                     "input": "float",
                     "suffix": "seconds",
                     "defaultX": 90,
                     "defaultY": 80
                 }
-            ]
         },
-        {
-            "type": "Control",
-            "blocks": [
-                {
-                    "type": "Control",
+        "Control": {
+                "delay": {
                     "name": "delay",
+                    "shape": "oneInput",
+                    "type": "Control",
                     "description": "The game will wait for X seconds before executing the next block.",
-                    "numInputs": 1,
                     "prefix": "Wait",
                     "input": "float",
                     "suffix": "seconds",
                     "defaultX": 40,
                     "defaultY": 40
                 }
-            ]
         },
-        {
-            "type": "Action",
-            "blocks": [
-                {
-                    "type": "Action",
+        "Action": {
+                "pickUpItem": {
                     "name": "pickUpItem",
+                    "shape": "zeroInput",
+                    "type": "Action",
                     "description": "The player will pick up the item next to the character.",
-                    "numInputs": 0,
                     "prefix": "Pick Up Item",
                     "defaultX": 40,
                     "defaultY": 40
                 }
-            ]
         },
-        {
-            "type": "Attack",
-            "blocks": [
-                {
-                    "type": "Attack",
+        "Attack": {
+                "fireball": {
                     "name": "fireball",
+                    "shape": "zeroInput",
+                    "type": "Attack",
                     "description": "The player will shoot a fireball.",
-                    "numInputs": 0,
                     "prefix": "Shoot Fireball",
                     "defaultX": 40,
                     "defaultY": 40
                 }
-            ]
+        },
+        "Misc": {
+                "startGame": {
+                    "name": "startGame",
+                    "shape": "startBlock",
+                    "type": "Misc",
+                    "description": "Make the player begin executing actions.",
+                    "numInputs": 0,
+                    "prefix": "Start Game",
+                    "defaultX": 350,
+                    "defaultY": 10
+                }
         }
-    ]
+    }
 }

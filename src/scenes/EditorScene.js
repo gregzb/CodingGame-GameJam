@@ -33,9 +33,12 @@ class EditorScene extends Phaser.Scene {
 
         this.background = this.add.image(300, 300, 'editorUI').setScale(4);
 
-        let buttonManger = new ButtonManager(this);
+        this.buttonManger = new ButtonManager(this);
 
-        let codeBlock = new CodeBlock(this, 300, 300, 'movementBlock', blockData.blockData[0].blocks[0]).setOrigin(0,0).setScale(6);
+        this.blocks = [];
+        this.addNewBlock();
+        //this.codeBlock = new CodeBlock(this, blockData.blockData.Movement.moveForwardTimed, blockData.blockShapes).setOrigin(0,0).setScale(6);
+        this.codeBlock2 = new CodeBlock(this, blockData.blockData.Misc.startGame, blockData.blockShapes).setOrigin(0,0).setScale(6);
 
         // this.actionButton = new Button({scene: this, x: 227, y: 227, texture: 'actionButton'});
         // this.actionButton.setOrigin(0, 0);
@@ -53,15 +56,41 @@ class EditorScene extends Phaser.Scene {
 
         //this.cam.startFollow(this.background);
 
+        this.input.on('pointerup', () => {
+            for (const codeBlock of this.blocks) {
+                codeBlock.inputField.editing = false;
+            }
+        });
+
         this.registry.set('divider', 600);
+        this.registry.set('editorActive', true);
 
     }
+
+    addNewBlock() {
+        this.blocks.push(new CodeBlock(this, blockData.blockData.Movement.moveForwardTimed, blockData.blockShapes).setOrigin(0,0).setScale(6));
+    }
+
+    
 
     buttonClicked(button) {
         console.log("Button " + button + " was pressed");
     }
 
     update(time, delta) {
+        //this.codeBlock.update(time, delta);
+        for (const codeBlock of this.blocks) {
+            codeBlock.update(time, delta);
+        }
+        this.codeBlock2.update(time, delta);
+        if (this.registry.get('divider') > 599) {
+            this.registry.set('editorActive', true);
+        } else if (this.registry.get('divider') < 201) {
+            this.registry.set('editorActive', false);
+            for (const codeBlock of this.blocks) {
+                codeBlock.inputField.editing = false;
+            }
+        }
         if (this.input.mousePointer.position.x > 600 &&
             this.input.mousePointer.prevPosition.x < 600) {
             this.scaleSize(false);

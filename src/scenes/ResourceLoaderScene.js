@@ -48,6 +48,8 @@ class ResourceLoaderScene extends Phaser.Scene {
         this.load.image('attackButton', 'assets/images/buttons/Attack.png');
 
         this.load.image('movementBlock', 'assets/images/MovementBlock1Input.png');
+        this.load.image('startBlock', 'assets/images/StartBlock.png');
+        this.load.image('textCursor', 'assets/images/Cursor.png');
     }
 }
 
