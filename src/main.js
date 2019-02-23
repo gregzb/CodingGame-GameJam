@@ -3,6 +3,7 @@ import './styles/styles.css';
 import ResourceLoaderScene from './scenes/ResourceLoaderScene';
 import GameScene from './scenes/GameScene';
 import EditorScene from './scenes/EditorScene';
+import GameUIScene from './scenes/GameUIScene';
 
 const config = {
     // For more settings see <https://github.com/photonstorm/phaser/blob/master/src/boot/Config.js>
@@ -28,7 +29,8 @@ const config = {
     scene: [
         ResourceLoaderScene,
         GameScene,
-        EditorScene
+        EditorScene,
+        GameUIScene
     ]
 };
 

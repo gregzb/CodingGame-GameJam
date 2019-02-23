@@ -73,4 +73,10 @@ export default class InputField extends Phaser.GameObjects.Zone {
             this.textCursor.setVisible(false);
         }
     }
+
+    clearResources() {
+        this.textCursor.destroy();
+        this.inputText.destroy();
+        this.destroy();
+    }
 }

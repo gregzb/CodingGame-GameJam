@@ -28,17 +28,33 @@
     },
     "blockData": {
         "Movement": {
-                "moveForwardTimed": {
-                    "name": "moveForwardTimed",
-                    "shape": "oneInput",
-                    "type": "Movement",
-                    "description": "The player will move forward in the current direction for X seconds.",
-                    "prefix": "Move forward",
-                    "input": "float",
-                    "suffix": "seconds",
-                    "defaultX": 90,
-                    "defaultY": 80
-                }
+            "moveForwardPerm": {
+                "name": "moveForwardPerm",
+                "shape": "zeroInput",
+                "type": "Movement",
+                "description": "The player will move forward in the current direction until told to stop.",
+                "prefix": "Move forward",
+                "defaultX": 90,
+                "defaultY": 80
+            },
+            "stopMovingForward": {
+                "name": "stopMovingForward",
+                "shape": "zeroInput",
+                "type": "Movement",
+                "description": "The player will stop moving forward.",
+                "prefix": "Stop moving",
+                "defaultX": 90,
+                "defaultY": 190
+            },
+            "jump": {
+                "name": "jump",
+                "shape": "zeroInput",
+                "type": "Movement",
+                "description": "The player will jump.",
+                "prefix": "Jump",
+                "defaultX": 90,
+                "defaultY": 300
+            }
         },
         "Control": {
                 "delay": {
@@ -49,31 +65,49 @@
                     "prefix": "Wait",
                     "input": "float",
                     "suffix": "seconds",
-                    "defaultX": 40,
-                    "defaultY": 40
+                    "defaultX": 90,
+                    "defaultY": 80
                 }
         },
         "Action": {
-                "pickUpItem": {
-                    "name": "pickUpItem",
-                    "shape": "zeroInput",
-                    "type": "Action",
-                    "description": "The player will pick up the item next to the character.",
-                    "prefix": "Pick Up Item",
-                    "defaultX": 40,
-                    "defaultY": 40
-                }
+            "pickUpItem": {
+                "name": "pickUpItem",
+                "shape": "zeroInput",
+                "type": "Action",
+                "description": "The player will pick up the item next to the character.",
+                "prefix": "Pick Up Item",
+                "defaultX": 90,
+                "defaultY": 80
+            }, 
+            "throwItem": {
+                "name": "throwItem",
+                "shape": "zeroInput",
+                "type": "Action",
+                "description": "The player will throw the currently held item.",
+                "prefix": "Throw Item",
+                "defaultX": 90,
+                "defaultY": 190
+            }
         },
         "Attack": {
-                "fireball": {
-                    "name": "fireball",
-                    "shape": "zeroInput",
-                    "type": "Attack",
-                    "description": "The player will shoot a fireball.",
-                    "prefix": "Shoot Fireball",
-                    "defaultX": 40,
-                    "defaultY": 40
-                }
+            "fireball": {
+                "name": "fireball",
+                "shape": "zeroInput",
+                "type": "Attack",
+                "description": "The player will shoot a fireball.",
+                "prefix": "Shoot Fireball",
+                "defaultX": 90,
+                "defaultY": 80
+            },
+            "dash": {
+                "name": "dash",
+                "shape": "zeroInput",
+                "type": "Attack",
+                "description": "The player will dash quickly and through enemies.",
+                "prefix": "Dash",
+                "defaultX": 90,
+                "defaultY": 190
+            }
         },
         "Misc": {
                 "startGame": {
@@ -84,7 +118,8 @@
                     "numInputs": 0,
                     "prefix": "Start Game",
                     "defaultX": 350,
-                    "defaultY": 10
+                    "defaultY": 10,
+                    "onBoard": true
                 }
         }
     }

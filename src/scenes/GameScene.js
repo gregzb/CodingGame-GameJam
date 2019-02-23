@@ -15,7 +15,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
-        this.zoom = 4;
+        this.zoom = 3.5;
 
         this.registry.set('updateViewport', () => this.updateViewport());
 

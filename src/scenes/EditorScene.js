@@ -5,6 +5,7 @@ import ButtonManager from '../helpers/ButtonManager';
 
 import blockData from '../helpers/blockData.json';
 import CodeBlock from '../helpers/CodeBlock';
+import CodeBlockManager from '../helpers/CodeBlockManager';
 
 class EditorScene extends Phaser.Scene {
     constructor(test) {
@@ -22,6 +23,7 @@ class EditorScene extends Phaser.Scene {
         this.zoom = 1;
 
         this.gameScene = this.scene.launch('GameScene');
+        this.gameUIScene = this.scene.launch('GameUIScene');
         this.cam = this.cameras.main;
 
         this.cam.roundPixels = true;
@@ -36,9 +38,12 @@ class EditorScene extends Phaser.Scene {
         this.buttonManger = new ButtonManager(this);
 
         this.blocks = [];
-        this.addNewBlock();
+        //this.codeBlock2 = new CodeBlock(this, blockData.blockData.Misc.startGame, blockData.blockShapes).setOrigin(0,0).setScale(6);
+        //this.addNewBlock();
+        this.blockManager = new CodeBlockManager(this);
+        //this.addNewBlock();
         //this.codeBlock = new CodeBlock(this, blockData.blockData.Movement.moveForwardTimed, blockData.blockShapes).setOrigin(0,0).setScale(6);
-        this.codeBlock2 = new CodeBlock(this, blockData.blockData.Misc.startGame, blockData.blockShapes).setOrigin(0,0).setScale(6);
+        //this.codeBlock2 = new CodeBlock(this, blockData.blockData.Misc.startGame, blockData.blockShapes).setOrigin(0,0).setScale(6);
 
         // this.actionButton = new Button({scene: this, x: 227, y: 227, texture: 'actionButton'});
         // this.actionButton.setOrigin(0, 0);
@@ -64,14 +69,7 @@ class EditorScene extends Phaser.Scene {
 
         this.registry.set('divider', 600);
         this.registry.set('editorActive', true);
-
     }
-
-    addNewBlock() {
-        this.blocks.push(new CodeBlock(this, blockData.blockData.Movement.moveForwardTimed, blockData.blockShapes).setOrigin(0,0).setScale(6));
-    }
-
-    
 
     buttonClicked(button) {
         console.log("Button " + button + " was pressed");
@@ -82,7 +80,7 @@ class EditorScene extends Phaser.Scene {
         for (const codeBlock of this.blocks) {
             codeBlock.update(time, delta);
         }
-        this.codeBlock2.update(time, delta);
+        this.blockManager.update(time, delta);
         if (this.registry.get('divider') > 599) {
             this.registry.set('editorActive', true);
         } else if (this.registry.get('divider') < 201) {
@@ -119,6 +117,7 @@ class EditorScene extends Phaser.Scene {
                 onUpdate: () => {
                     cam.setViewport(0, 0, this.registry.get('divider'), 600);
                     this.registry.get('updateViewport')();
+                    this.registry.get('updateUIViewport')();
                 }
             });
         } else {
@@ -133,6 +132,7 @@ class EditorScene extends Phaser.Scene {
                 onUpdate: () => {
                     cam.setViewport(0, 0, this.registry.get('divider'), 600);
                     this.registry.get('updateViewport')();
+                    this.registry.get('updateUIViewport')();
                 }
             });
         }

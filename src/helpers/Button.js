@@ -4,13 +4,15 @@ export default class Button extends Phaser.GameObjects.Image{
 
     constructor(config) {
         super(config.scene, config.x, config.y, config.texture);
-        this.resetCallback = config.resetCallback;
+        this.buttonPressed = config.buttonPressed;
         config.scene.add.existing(this);
         this.setInteractive({useHandCursor: true});
         this.on('pointerover', () => this.onPointerOver());
         this.on('pointerout', () => this.onPointerOut());
         this.on('pointerup', () => this.onPointerUp());
         this.on('pointerdown', () => this.onPointerDown());
+
+        this.canSetActive = config.canSetActive | false;
 
         this.isHovered = false;
         this.isClicked = false;
@@ -42,8 +44,10 @@ export default class Button extends Phaser.GameObjects.Image{
 
     onPointerUp() {
         if (this.isClicked && this.isHovered) {
-            this.resetCallback();
-            this.isActive = true;
+            this.buttonPressed(this);
+            if (this.canSetActive) {
+                this.isActive = true;
+            }
         }
         this.isClicked = false;
         this.updateButton();

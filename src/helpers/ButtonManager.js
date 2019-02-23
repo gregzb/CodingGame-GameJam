@@ -3,6 +3,7 @@ import config from './buttonInfo.json';
 
 export default class ButtonManager {
     constructor(scene) {
+        this.scene = scene;
         this.config = config;
         this.buttons = [];
         for (let i = 0; i < config.buttons.length; i++) {
@@ -11,13 +12,21 @@ export default class ButtonManager {
                 scene: scene, 
                 x: config.initX + (config.offsetX * i * 4), 
                 y: config.initY + (config.offsetY * i * 4), 
-                texture: button.name, 
-                resetCallback: () => this.resetActiveButtons()
+                texture: button.name,
+                canSetActive: true,
+                buttonPressed: (button) => this.buttonPressed(button)
             }).setOrigin(0,0).setScale(4));
         }
 
         this.buttons[0].isActive = true;
         this.buttons[0].updateButton();
+
+        this.nameDict = {
+            "movementButton": "Movement",
+            "clockButton": "Control",
+            "actionButton": "Action",
+            "attackButton": "Attack"
+        };
     }
 
     resetActiveButtons() {
@@ -26,6 +35,11 @@ export default class ButtonManager {
             element.isActive = false;
             element.updateButton();
         });
+    }
+
+    buttonPressed(button) {
+        this.resetActiveButtons();
+        this.scene.blockManager.setToolbar(this.nameDict[button.texture.key]);
     }
 
     getActiveButton() {

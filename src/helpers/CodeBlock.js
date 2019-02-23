@@ -22,8 +22,11 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         this.setInteractive({ useHandCursor: this.shape.draggable });
         scene.input.setDraggable(this);
 
+        this.previousBlock = null;
+        this.nextBlock = null;
+
         if (this.shape.draggable) {
-            //this.on('dragstart', (pointer, dragX, dragY) => this.onDragStart(pointer, dragX, dragY));
+            this.on('dragstart', (pointer, dragX, dragY) => this.onDragStart(pointer, dragX, dragY));
             this.on('drag', (pointer, dragX, dragY) => this.onDrag(pointer, dragX, dragY));
             this.on('dragend', (pointer, dragX, dragY) => this.onDragEnd(pointer, dragX, dragY));
             //this.on('drop', (pointer, target) => this.onDrop(pointer, target));
@@ -39,7 +42,8 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
 
         //console.log(this.getBounds());
 
-        this.zone = this.scene.add.zone(this.x, this.y + this.height * 6 - 8 * 2, this.width * 6, 8 * 2).setDropZone().setOrigin(0, 0);
+        this.zone = this.scene.add.zone(this.x, this.y + this.height * 6 - 8 * 2, this.width * 6, 8 * 3).setDropZone().setOrigin(0, 0);
+        this.zone.block = this;
         this.scene.physics.world.enable(this.zone);
         this.zone.body.setAllowGravity(false);
         if (this.scene.registry.get('blockZones')) {
@@ -53,24 +57,67 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         this.graphics.setVisible(false);
         this.graphics.lineStyle(2, 0xffff00);
         this.graphics.strokeRect(this.zone.x + this.zone.input.hitArea.x, this.zone.y + this.zone.input.hitArea.y, this.zone.input.hitArea.width, this.zone.input.hitArea.height);
+    
+        this.onBoard = false;
+        this.setOnBoard(data.onBoard, this.previousBlock);
     }
 
-    updateChildren() {
-        // this.prefixText.x = this.x + 25;
-        // this.prefixText.y = this.y + 10;
-        // this.suffixText.x = this.x + 25;
-        // this.suffixText.y = this.y + 60;
-        // this.inputField.x = this.x + 18;
-        // this.inputField.y = this.y + 32;
+    setOnBoard(isOnBoard, prevBlock) {
+        if (!(isOnBoard | false)) {
+            this.onBoard = false;
+            this.disableSnapZone();
+            this.setPreviousBlock(null);
+        } else {
+            this.onBoard = true;
+            if (!this.nextBlock) {
+                this.enableSnapZone();
+            }
+            this.setPreviousBlock(prevBlock);
+        }
+    }
 
-        this.zone.x = this.x;
-        this.zone.y = this.y + this.height * 6 - 8 * 2;
-        this.graphics.clear();
-        this.graphics.lineStyle(2, 0xffff00);
-        this.graphics.strokeRect(this.zone.x + this.zone.input.hitArea.x, this.zone.y + this.zone.input.hitArea.y, this.zone.input.hitArea.width, this.zone.input.hitArea.height);
+    setPreviousBlock(prevBlock) {
+        if (prevBlock !== null) {
+            prevBlock.nextBlock = this;
+            prevBlock.disableSnapZone();
+        } else if (this.previousBlock !== null){
+            this.previousBlock.nextBlock = null;
+            this.previousBlock.enableSnapZone();
+        }
+        this.previousBlock = prevBlock;
+    }
 
-        this.prefixText.x = this.x + this.shape.prefixOffsetX;
-        this.prefixText.y = this.y + this.shape.prefixOffsetY;
+    disableSnapZone() {
+        this.scene.physics.world.disable(this.zone);
+        this.graphics.setVisible(false);
+    }
+
+    enableSnapZone() {
+        this.scene.physics.world.enable(this.zone);
+        this.graphics.setVisible(true);
+    }
+
+    updateChildren(time, delta) {
+
+        if (this.nextBlock) {
+            this.nextBlock.update(time, delta);
+        }
+
+        if (this.zone.scene) {
+            this.zone.x = this.x;
+            this.zone.y = this.y + this.height * 6 - 8 * 2;
+        }
+
+        if (this.graphics.scene) {
+            this.graphics.clear();
+            this.graphics.lineStyle(2, 0xffff00);
+            this.graphics.strokeRect(this.zone.x + this.zone.input.hitArea.x, this.zone.y + this.zone.input.hitArea.y, this.zone.input.hitArea.width, this.zone.input.hitArea.height);
+        }
+
+        if (this.prefixText.scene) {
+            this.prefixText.x = this.x + this.shape.prefixOffsetX;
+            this.prefixText.y = this.y + this.shape.prefixOffsetY;
+        }
 
         if (this.shape.hasOwnProperty('suffixOffsetX')) {
             this.suffixText.x = this.x + this.shape.suffixOffsetX;
@@ -79,30 +126,32 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         if (this.shape.hasOwnProperty('inputOffsetX')) {
             this.inputField.x = this.x + this.shape.inputOffsetX;
             this.inputField.y = this.y + this.shape.inputOffsetY;
+            this.inputField.update(time, delta);
         }
     }
 
     onOverlap(object1, object2) {
+        //May overlap many times, stop after the first one?
         this.x = object2.x;
         this.y = object2.y;
-        this.scene.addNewBlock();
-        //console.log(this.x, this.y);
-        //console.log(object2.x, object2.y);
-        //console.log("fuck");
+        this.setOnBoard(true, object2.block);
+        if (!this.wasOnBoard) {
+            this.scene.blockManager.boardBlocks.push(this);
+            this.scene.blockManager.displayToolbarBlocks();
+        }
     }
 
-    /*onDragStart(pointer, dragX, dragY) {
-        this.overlaps = [];
-        for (const zone of this.scene.registry.get('blockZones')) {
-            this.overlaps.push(this.scene.physics.add.overlap(this, zone, (object1, object2) => this.onOverlap(object1, object2)));
+    onDragStart(pointer, dragX, dragY) {
+        if (this.onBoard) {
+            this.setOnBoard(false, null);
+            this.wasOnBoard = true;
         }
-        this.x = dragX;
-        this.y = dragY;
-}*/
+    }
 
     onDrag(pointer, dragX, dragY) {
         this.x = dragX;
         this.y = dragY;
+        //console.log(this.nextBlock);
     }
 
     collideExtra(object1, object2) {
@@ -118,10 +167,22 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         // console.log("ended");
         // console.log(this.scene.registry.get('blockZones'));
         // console.log(this);
+
+        // if (this.shouldDestroy) {
+        //     //console.log(this);
+        //     this.destroy();
+        //     //console.log(this);
+        // }
+
         if (!this.scene.physics.overlap(this, this.scene.registry.get('blockZones'), (object1, object2) => this.onOverlap(object1, object2), (object1, object2) => this.collideExtra(object1, object2))) {
-            //console.log("no overlaps");
+            if (this.wasOnBoard) {
+                this.clearResources();
+            }
+            //dragging off then back on duplicates
             this.x = this.defaultPos.x;
             this.y = this.defaultPos.y;
+        } else {
+            this.wasOnBoard = false;
         }
 
         // for (const zone of this.scene.registry.get('blockZones')) {
@@ -135,9 +196,20 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
     }
 
     update(time, delta) {
-        this.updateChildren();
-        if (this.shape.hasOwnProperty('inputOffsetX')) {
-            this.inputField.update(time, delta);
+        this.updateChildren(time, delta);
+        if (this.nextBlock) {
+            this.nextBlock.x = this.x;
+            this.nextBlock.y = this.y + this.height * 6 - 8 * 2;
         }
+    }
+
+    clearResources() {
+        this.nextBlock && this.nextBlock.clearResources();
+        this.zone && this.zone.destroy();
+        this.graphics && this.graphics.destroy();
+        this.inputField && this.inputField.clearResources();
+        this.prefixText && this.prefixText.destroy();
+        this.suffixText && this.suffixText.destroy();
+        this.destroy();
     }
 }
