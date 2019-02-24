@@ -43,11 +43,13 @@ export default class InputField extends Phaser.GameObjects.Zone {
             this.parent.setInteractive();
             this.pointerOver = false;
         });
-        this.on('pointerdown', (pointer, localX, localY, event, test) => {
+        this.on('pointerdown', (pointer, localX, localY, event) => {
         });
-        this.on('pointerup', (pointer, localX, localY, event, test) => {
-            for (const codeBlock of this.scene.blocks) {
-                codeBlock.inputField.editing = false;
+        this.on('pointerup', (pointer, localX, localY, event) => {
+            for (const codeBlock of this.scene.blockManager.allBlocks()) {
+                if (codeBlock.inputField) {
+                    codeBlock.inputField.editing = false;
+                }
             }
             if (this.pointerOver) {
                 this.editing = true;

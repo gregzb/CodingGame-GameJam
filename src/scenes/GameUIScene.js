@@ -38,7 +38,13 @@ class GameScene extends Phaser.Scene {
     }
 
     buttonPressed(button) {
-        console.log(button.texture.key + " pressed");
+        //console.log(button.texture.key + " pressed");
+        const gameScene = this.scene.get("GameScene");
+        if (button.texture.key === "greenFlag") {
+            gameScene.level.executeInstructions();
+        } else if (button.texture.key === "stopSign") {
+            gameScene.level.stopInstructions();
+        }
     }
 
     update(time, delta) {

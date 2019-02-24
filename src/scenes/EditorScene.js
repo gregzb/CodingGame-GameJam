@@ -37,7 +37,7 @@ class EditorScene extends Phaser.Scene {
 
         this.buttonManger = new ButtonManager(this);
 
-        this.blocks = [];
+        //this.blocks = [];
         //this.codeBlock2 = new CodeBlock(this, blockData.blockData.Misc.startGame, blockData.blockShapes).setOrigin(0,0).setScale(6);
         //this.addNewBlock();
         this.blockManager = new CodeBlockManager(this);
@@ -61,9 +61,11 @@ class EditorScene extends Phaser.Scene {
 
         //this.cam.startFollow(this.background);
 
-        this.input.on('pointerup', () => {
-            for (const codeBlock of this.blocks) {
-                codeBlock.inputField.editing = false;
+        this.input.on('pointerdown', () => {
+            for (const codeBlock of this.blockManager.allBlocks()) {
+                if (codeBlock.inputField) {
+                    codeBlock.inputField.editing = false;
+                }
             }
         });
 
@@ -77,16 +79,18 @@ class EditorScene extends Phaser.Scene {
 
     update(time, delta) {
         //this.codeBlock.update(time, delta);
-        for (const codeBlock of this.blocks) {
-            codeBlock.update(time, delta);
-        }
+        // for (const codeBlock of this.blocks) {
+        //     codeBlock.update(time, delta);
+        // }
         this.blockManager.update(time, delta);
         if (this.registry.get('divider') > 599) {
             this.registry.set('editorActive', true);
         } else if (this.registry.get('divider') < 201) {
             this.registry.set('editorActive', false);
-            for (const codeBlock of this.blocks) {
-                codeBlock.inputField.editing = false;
+            for (const codeBlock of this.blockManager.allBlocks()) {
+                if (codeBlock.inputField) {
+                    codeBlock.inputField.editing = false;
+                }
             }
         }
         if (this.input.mousePointer.position.x > 600 &&

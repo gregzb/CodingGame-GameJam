@@ -9,36 +9,14 @@ export default class Player extends Phaser.GameObjects.Sprite{
         this.alive = true;
 
         this.body.setCollideWorldBounds(true);
-        //this.body.setBounce(0.5,0.5);
-
-        // start still and wait until needed
-        //this.body.setCollideWorldBounds(true);
-        //this.body.setVelocity(0, 0).setBounce(0, 0).setCollideWorldBounds(false);
-        //this.body.allowGravity = false;
-        //this.beenSeen = false;
 
         this.body.setSize(16, 18);
         this.body.offset.set(4, 6);
-
-        //this.body.setAllowGravity(true);
-
-        //this.body.setDrag(100,100);
-        //this.body.drag.sest(0.9,0.1);
-        //this.body.useDamping = true;
-
-        //this.body.useDamping = true;
-        //this.body.drag.x = .5;
-        //this.body.drag.y = 1.5;
-        console.log(this.body.drag);
 
         this.acceleration = 400;
 
         this.body.maxVelocity.x = 150;
         this.body.maxVelocity.y = 500;
-
-        //this.body.maxVelocity.set(150,this.body.maxVelocity.y);
-        //this.body.friction.set(100, 100);
-        console.log(this.body);
 
         this.running = false;
         this.prevRunning = this.running;
@@ -46,16 +24,34 @@ export default class Player extends Phaser.GameObjects.Sprite{
         this.onGround = this.body.blocked.down;
         this.prevGround = this.onGround;
         this.prevFlipX = this.flipX;
+        this.nextFlipX = this.flipX;
         this.prevInput = {};
+
+        this.startPosX = this.x;
+        this.startPosY = this.y;
+
+        this.input = {
+            right: false,
+            left: false,
+            jump: false,
+        };
     }
 
     updateSprite(keys, time, delta) {
-        this.input = this.getInput(keys);
+        //this.input = this.getInput(keys);
         if (!this.prevInput) {
             this.prevInput = this.input;
         }
 
+        this.flipX = this.nextFlipX;
+
         this.onGround = this.body.blocked.down;
+
+        if (this.body.maxVelocity.x > 150) {
+            this.body.maxVelocity.x *= 0.75;
+        } else {
+            this.body.maxVelocity.x = 150;
+        }
 
         if (this.input.right) {
             this.body.setAccelerationX(this.acceleration);
@@ -69,25 +65,19 @@ export default class Player extends Phaser.GameObjects.Sprite{
             this.body.setAccelerationX(0);
         }
 
-        //1 is an arbitrary num greater than 0
-        if (Math.abs(this.body.velocity.x) > 1) {
-            if (this.running === false && !this.jumping) {
-                //this.anims.play("run");
-            }
-            this.running = true;
-        } else {
-            this.running = false;
-            //this.anims.play("idle");
-        }
+        // //1 is an arbitrary num greater than 0
+        // if (Math.abs(this.body.velocity.x) > 1) {
+        //     // if (this.running === false && !this.jumping) {
+        //     //     //this.anims.play("run");
+        //     // }
+        //     this.running = true;
+        // } else {
+        //     this.running = false;
+        // }
+
+        this.running = Math.abs(this.body.velocity.x) > 1;
 
         this.jump(this.input.jump && !this.prevInput.jump);
-
-        // if (input.jump && !this.jumping) {
-        //     this.jump();
-        //     //this.anims.play("jump");
-        // } else {
-        //     this.body.acceleration.y = 0;
-        // }
 
         if (!this.onGround) {
             this.anims.play("jump");
@@ -99,34 +89,33 @@ export default class Player extends Phaser.GameObjects.Sprite{
             }
         }
 
-        // if (this.onGround) {
-        //     if (this.jumping) {
-        //         if (this.running) {
-        //             this.anims.play("run");
-        //         } else {
-        //             this.anims.play("idle");
-        //         }
-        //     }
-        //     this.jumping = false;
-        // }
+        if (this.body.velocity.x > 150) {
+            this.anims.play("dash");
+        }
 
-        //console.log(this.body.);
-        //console.log((this.body.velocity.x === 0 ? this.prevFlipX : true));
-        this.flipX = this.body.velocity.x === 0 ? this.prevFlipX : this.body.velocity.x < 0;
-        // console.log();
-        // console.log(this.body.velocity);
-        // console.log(this.body.acceleration);
-        //console.log(this.body.touching);
-        //console.log(this.body.onFloor());
+        if (this.nextFlipX != this.flipX) {
+            //this.flipX = this.nextFlipX;
+        } else {
+            this.nextFlipX = this.body.velocity.x === 0 ? this.prevFlipX : this.body.velocity.x < 0;
+        }
+
         this.prevRunning = this.running;
         this.prevGround = this.onGround;
         this.prevFlipX = this.flipX;
-        this.prevInput = this.input;
+        this.prevInput = Object.assign({}, this.input);
+
+        //Game control part
+        //this.prevInput.jump = false;
     }
 
     jump(jumpDown) {
+        //console.log(jumpDown);
         if (jumpDown && !this.jumping && this.onGround) {
             this.jumping = true;
+
+            //Game control part
+            this.input.jump = false;
+
             this.body.acceleration.y = -1000;
             this.body.setVelocityY(-300);
             //console.log("Jumped");
@@ -136,6 +125,37 @@ export default class Player extends Phaser.GameObjects.Sprite{
                 this.jumping = false;
             }
         }
+    }
+
+    moveForward() {
+        if (this.input.right || this.input.left) {
+            return;
+        }
+        this.input.right = !this.flipX;
+        this.input.left = this.flipX;
+    }
+
+    stopMoving() {
+        this.input.left = this.input.right = false;
+    }
+
+    changeDirection() {
+        this.nextFlipX = !this.flipX;
+    }
+
+    extJump() {
+        //this.prevInput.jump = false;
+        //this.input.jump = true;
+        this.jump(true);
+    }
+
+    dash() {
+        this.body.maxVelocity.x = 1500;
+        this.body.velocity.x = 1500 * (this.flipX ? -1 : 1);
+    }
+
+    doNothing() {
+        
     }
 
     getInput(keys) {

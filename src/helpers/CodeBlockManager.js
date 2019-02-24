@@ -46,4 +46,8 @@ export default class CodeBlockManager {
             codeBlock.update(time, delta);
         }
     }
+
+    allBlocks() {
+        return this.currentBlocks.concat(this.boardBlocks);
+    }
 }

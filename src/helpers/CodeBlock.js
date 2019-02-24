@@ -9,6 +9,8 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         this.scene.physics.world.enable(this);
         this.body.setAllowGravity(false);
 
+        this.command = data.command;
+
         this.blockType = data.type;
         this.name = data.name;
         this.description = data.description;
@@ -42,7 +44,7 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
 
         //console.log(this.getBounds());
 
-        this.zone = this.scene.add.zone(this.x, this.y + this.height * 6 - 8 * 2, this.width * 6, 8 * 3).setDropZone().setOrigin(0, 0);
+        this.zone = this.scene.add.zone(this.x, this.y + this.height * 6 - 8 * 2, this.width * 6, 8 * 4).setDropZone().setOrigin(0, 0);
         this.zone.block = this;
         this.scene.physics.world.enable(this.zone);
         this.zone.body.setAllowGravity(false);
@@ -95,6 +97,7 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
     enableSnapZone() {
         this.scene.physics.world.enable(this.zone);
         this.graphics.setVisible(true);
+        this.graphics.setVisible(false);
     }
 
     updateChildren(time, delta) {
