@@ -7,7 +7,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
         config.scene.add.existing(this);
         this.alive = true;
 
-        this.body.allowGravity = false;
+        //this.body.allowGravity = false;
 
         this.body.setCollideWorldBounds(true);
 

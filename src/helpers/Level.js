@@ -102,14 +102,6 @@ export default class Level {
             }
         }
 
-        if (this.playerSprite.body.velocity.x === 0 && this.playerSprite.body.velocity.y === 0) {
-            //console.log(this.currentTicks);
-            console.log(" ");
-        } else {
-            console.log(this.scene.physics.world.stepsLastFrame);
-            this.currentTicks += this.scene.physics.world.stepsLastFrame;
-        }
-
         this.playerSprite.updateSprite(this.keys, time, delta);
 
 

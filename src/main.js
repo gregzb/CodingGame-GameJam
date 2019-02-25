@@ -22,7 +22,6 @@ const config = {
             gravity: {
                 y: 800
             },
-            fps: 200,
             debug: false
             // debug: true,
             // debugShowBody: true,
