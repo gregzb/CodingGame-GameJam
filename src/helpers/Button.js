@@ -3,7 +3,11 @@ import Phaser from 'phaser';
 export default class Button extends Phaser.GameObjects.Image{
 
     constructor(config) {
-        super(config.scene, config.x, config.y, config.texture);
+        if (config.frame) {
+            super(config.scene, config.x, config.y, config.texture, config.frame);
+        } else {
+            super(config.scene, config.x, config.y, config.texture);
+        }
         this.buttonPressed = config.buttonPressed;
         config.scene.add.existing(this);
         this.setInteractive({useHandCursor: true});
@@ -54,6 +58,7 @@ export default class Button extends Phaser.GameObjects.Image{
     }
 
     onPointerDown() {
+        this.scene.registry.get("removeKeyboard")();
         this.isClicked = true;
         this.updateButton();
     }

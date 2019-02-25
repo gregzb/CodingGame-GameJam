@@ -37,6 +37,7 @@ class ResourceLoaderScene extends Phaser.Scene {
         this.load.image('tiles', 'assets/tilemaps/map2/Tileset.png');
 
         this.load.atlas('player', 'assets/spritesheets/mortmort/spritesheet.png', 'assets/spritesheets/mortmort/spritesheet.json');
+        this.load.atlas('fullscreenButtons', 'assets/spritesheets/fullscreenButtons/spritesheet.png', 'assets/spritesheets/fullscreenButtons/spritesheet.json');
 
         this.load.image('editorUI', 'assets/images/EditorUI.png');
 

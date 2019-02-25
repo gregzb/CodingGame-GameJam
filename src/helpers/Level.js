@@ -11,6 +11,9 @@ export default class Level {
         this.data = data;
 
         this.scene.load.scenePlugin('animatedTiles', AnimatedTiles, 'animatedTiles', 'animatedTiles');
+
+        //this.startTicks = 0;
+        this.currentTicks = 0;
     }
 
     init() {
@@ -99,9 +102,17 @@ export default class Level {
             }
         }
 
-
+        if (this.playerSprite.body.velocity.x === 0 && this.playerSprite.body.velocity.y === 0) {
+            //console.log(this.currentTicks);
+            console.log(" ");
+        } else {
+            console.log(this.scene.physics.world.stepsLastFrame);
+            this.currentTicks += this.scene.physics.world.stepsLastFrame;
+        }
 
         this.playerSprite.updateSprite(this.keys, time, delta);
+
+
         //this.playerSprite.changeDirection();
         //this.playerSprite.moveForward();
         //this.playerSprite.stopMoving();
@@ -144,6 +155,7 @@ export default class Level {
         this.stopInstructions();
         this.currentBlock = this.startingBlock;
         this.executing = true;
+        this.currentTicks = 0;
     }
 
     stopInstructions() {

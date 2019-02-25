@@ -1,16 +1,16 @@
-import AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.min.js';
-import Button from '../helpers/Button';
-import Phaser from 'phaser';
-import ButtonManager from '../helpers/ButtonManager';
+import AnimatedTiles from "phaser-animated-tiles/dist/AnimatedTiles.min.js";
+import Button from "../helpers/Button";
+import Phaser from "phaser";
+import ButtonManager from "../helpers/ButtonManager";
 
-import blockData from '../helpers/blockData.json';
-import CodeBlock from '../helpers/CodeBlock';
-import CodeBlockManager from '../helpers/CodeBlockManager';
+import blockData from "../helpers/blockData.json";
+import CodeBlock from "../helpers/CodeBlock";
+import CodeBlockManager from "../helpers/CodeBlockManager";
 
 class EditorScene extends Phaser.Scene {
     constructor(test) {
         super({
-            key: 'EditorScene'
+            key: "EditorScene"
         });
     }
 
@@ -20,10 +20,15 @@ class EditorScene extends Phaser.Scene {
 
     create() {
 
+        //this.physics.world.TILE_BIAS = 32;
+        //this.physics.world.setFPS(1);
+
+        //this.scale.setParentSize(800, 600);
+
         this.zoom = 1;
 
-        this.gameScene = this.scene.launch('GameScene');
-        this.gameUIScene = this.scene.launch('GameUIScene');
+        this.gameScene = this.scene.launch("GameScene");
+        this.gameUIScene = this.scene.launch("GameUIScene");
         this.cam = this.cameras.main;
 
         this.cam.roundPixels = true;
@@ -33,7 +38,7 @@ class EditorScene extends Phaser.Scene {
 
         //this.cam.scrollX = 300/this.zoom;
 
-        this.background = this.add.image(300, 300, 'editorUI').setScale(4);
+        this.background = this.add.image(300, 300, "editorUI").setScale(4);
 
         this.buttonManger = new ButtonManager(this);
 
@@ -41,6 +46,19 @@ class EditorScene extends Phaser.Scene {
         //this.codeBlock2 = new CodeBlock(this, blockData.blockData.Misc.startGame, blockData.blockShapes).setOrigin(0,0).setScale(6);
         //this.addNewBlock();
         this.blockManager = new CodeBlockManager(this);
+
+        this.fullscreenButton = new Button({
+            scene: this,
+            x: 11,
+            y: 538,
+            texture: "fullscreenButtons",
+            frame: 0,
+            canSetActive: false,
+            buttonPressed: button => this.buttonPressed(button)
+        })
+            .setOrigin(0, 0)
+            .setScale(7);
+
         //this.addNewBlock();
         //this.codeBlock = new CodeBlock(this, blockData.blockData.Movement.moveForwardTimed, blockData.blockShapes).setOrigin(0,0).setScale(6);
         //this.codeBlock2 = new CodeBlock(this, blockData.blockData.Misc.startGame, blockData.blockShapes).setOrigin(0,0).setScale(6);
@@ -61,19 +79,39 @@ class EditorScene extends Phaser.Scene {
 
         //this.cam.startFollow(this.background);
 
-        this.input.on('pointerdown', () => {
+        this.input.on("pointerdown", () => {
             for (const codeBlock of this.blockManager.allBlocks()) {
                 if (codeBlock.inputField) {
+                    this.registry.get("removeKeyboard")();
                     codeBlock.inputField.editing = false;
                 }
             }
         });
 
-        this.registry.set('divider', 600);
-        this.registry.set('editorActive', true);
+        this.registry.set("divider", 600);
+        this.registry.set("editorActive", true);
+
+        this.registry.set("bringUpKeyboard", () => {
+            document.getElementById("dummy").focus();
+        });
+
+        this.registry.set("removeKeyboard", () => {
+            document.getElementById("dummy").value = "";
+            document.getElementById("dummy").blur();
+        });
+
+        //this.scale.fullscreenTarget = this.game.canvas;
     }
 
-    buttonClicked(button) {
+    buttonPressed(button) {
+        if (button.texture.key === "fullscreenButtons") {
+            button.setFrame(
+                button.frame.name === "FullscreenButton.png"
+                    ? "WindowButton.png"
+                    : "FullscreenButton.png"
+            );
+            this.scale.toggleFullscreen();
+        }
         console.log("Button " + button + " was pressed");
     }
 
@@ -83,21 +121,25 @@ class EditorScene extends Phaser.Scene {
         //     codeBlock.update(time, delta);
         // }
         this.blockManager.update(time, delta);
-        if (this.registry.get('divider') > 599) {
-            this.registry.set('editorActive', true);
-        } else if (this.registry.get('divider') < 201) {
-            this.registry.set('editorActive', false);
+        if (this.registry.get("divider") > 599) {
+            this.registry.set("editorActive", true);
+        } else if (this.registry.get("divider") < 201) {
+            this.registry.set("editorActive", false);
             for (const codeBlock of this.blockManager.allBlocks()) {
                 if (codeBlock.inputField) {
                     codeBlock.inputField.editing = false;
                 }
             }
         }
-        if (this.input.mousePointer.position.x > 600 &&
-            this.input.mousePointer.prevPosition.x < 600) {
+        if (
+            this.input.activePointer.position.x > 600 &&
+            this.input.activePointer.prevPosition.x < 600
+        ) {
             this.scaleSize(false);
-        } else if (this.input.mousePointer.position.x < 200 &&
-            this.input.mousePointer.prevPosition.x > 200) {
+        } else if (
+            this.input.activePointer.position.x < 200 &&
+            this.input.activePointer.prevPosition.x > 200
+        ) {
             this.scaleSize(true);
         }
         //console.log(this.cam.getWorldPoint(0,0));
@@ -113,30 +155,40 @@ class EditorScene extends Phaser.Scene {
             let tweenToEditor = this.tweens.add({
                 targets: this.registry.list,
                 props: {
-                    divider: { value: function () { return 600; }, ease: 'Power1' }
+                    divider: {
+                        value: function() {
+                            return 600;
+                        },
+                        ease: "Power1"
+                    }
                 },
                 duration: 600,
                 yoyo: false,
                 repeat: 0,
                 onUpdate: () => {
-                    cam.setViewport(0, 0, this.registry.get('divider'), 600);
-                    this.registry.get('updateViewport')();
-                    this.registry.get('updateUIViewport')();
+                    cam.setViewport(0, 0, this.registry.get("divider"), 600);
+                    this.registry.get("updateViewport")();
+                    this.registry.get("updateUIViewport")();
                 }
             });
         } else {
             let tweenToGame = this.tweens.add({
                 targets: this.registry.list,
                 props: {
-                    divider: { value: function () { return 200; }, ease: 'Power1' }
+                    divider: {
+                        value: function() {
+                            return 200;
+                        },
+                        ease: "Power1"
+                    }
                 },
                 duration: 600,
                 yoyo: false,
                 repeat: 0,
                 onUpdate: () => {
-                    cam.setViewport(0, 0, this.registry.get('divider'), 600);
-                    this.registry.get('updateViewport')();
-                    this.registry.get('updateUIViewport')();
+                    cam.setViewport(0, 0, this.registry.get("divider"), 600);
+                    this.registry.get("updateViewport")();
+                    this.registry.get("updateUIViewport")();
                 }
             });
         }

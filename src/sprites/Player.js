@@ -1,12 +1,13 @@
-import Phaser from 'phaser';
+import Phaser from "phaser";
 
-export default class Player extends Phaser.GameObjects.Sprite{
-
+export default class Player extends Phaser.GameObjects.Sprite {
     constructor(config) {
         super(config.scene, config.x, config.y, config.texture, config.frame);
         config.scene.physics.world.enable(this);
         config.scene.add.existing(this);
         this.alive = true;
+
+        this.body.allowGravity = false;
 
         this.body.setCollideWorldBounds(true);
 
@@ -33,11 +34,24 @@ export default class Player extends Phaser.GameObjects.Sprite{
         this.input = {
             right: false,
             left: false,
-            jump: false,
+            jump: false
         };
+
+        this.tempSprites = [];
     }
 
     updateSprite(keys, time, delta) {
+
+        for (const tempSprite of this.tempSprites) {
+            if (tempSprite.currentAlpha <= 0) {
+                this.tempSprites.shift();
+                tempSprite.destroy();
+            }
+            const dtSec = delta/1000;
+            tempSprite.currentAlpha -= dtSec * 5;
+            tempSprite.setAlpha(tempSprite.currentAlpha);
+        }
+
         //this.input = this.getInput(keys);
         if (!this.prevInput) {
             this.prevInput = this.input;
@@ -59,7 +73,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
             this.body.setAccelerationX(-this.acceleration);
         } else {
             this.body.velocity.x *= 0.75;
-            if (Math.abs(this.body.velocity.x) < .5) {
+            if (Math.abs(this.body.velocity.x) < 0.5) {
                 this.body.velocity.x = 0;
             }
             this.body.setAccelerationX(0);
@@ -82,21 +96,41 @@ export default class Player extends Phaser.GameObjects.Sprite{
         if (!this.onGround) {
             this.anims.play("jump");
         } else {
-            if (this.running && !this.prevRunning || this.onGround && !this.prevGround) {
+            if (
+                (this.running && !this.prevRunning) ||
+                (this.onGround && !this.prevGround)
+            ) {
                 this.anims.play("run");
-            } else if (!this.running){
+            } else if (!this.running) {
                 this.anims.play("idle");
             }
         }
 
         if (this.body.velocity.x > 150) {
+            let temp = new Player({
+                scene: this.scene,
+                x: this.x,
+                y: this.y,
+                texture: "player",
+                frame: "MortMortSprite-3.png"
+            });
+            this.scene.physics.world.disable(temp);
+            temp.currentAlpha = 0.75;
+            temp.setAlpha(temp.currentAlpha);
+            temp.parent = this;
+            temp.setTint(0xb2ddff);
+            this.tempSprites.push(temp);
+
             this.anims.play("dash");
         }
 
         if (this.nextFlipX != this.flipX) {
             //this.flipX = this.nextFlipX;
         } else {
-            this.nextFlipX = this.body.velocity.x === 0 ? this.prevFlipX : this.body.velocity.x < 0;
+            this.nextFlipX =
+                this.body.velocity.x === 0
+                    ? this.prevFlipX
+                    : this.body.velocity.x < 0;
         }
 
         this.prevRunning = this.running;
@@ -152,18 +186,19 @@ export default class Player extends Phaser.GameObjects.Sprite{
     dash() {
         this.body.maxVelocity.x = 1500;
         this.body.velocity.x = 1500 * (this.flipX ? -1 : 1);
+        // this.temp = new Player({ scene: this.scene, x: this.x, y: this.y, texture: 'player', frame: 'MortMortSprite-1.png' });
+        // this.scene.physics.world.disable(this.temp);
+        // this.temp.setAlpha(0.5);
     }
 
-    doNothing() {
-        
-    }
+    doNothing() {}
 
     getInput(keys) {
         return {
             left: keys.left.isDown,
             right: keys.right.isDown,
             down: keys.down.isDown,
-            jump: keys.jump.isDown || keys.jump2.isDown,
+            jump: keys.jump.isDown || keys.jump2.isDown
         };
     }
 }

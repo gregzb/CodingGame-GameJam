@@ -16,6 +16,8 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
+        this.physics.world.setFPS(9);
+
         this.zoom = 3.5;
 
         this.cam = this.cameras.main;

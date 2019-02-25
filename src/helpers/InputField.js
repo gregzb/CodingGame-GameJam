@@ -52,6 +52,7 @@ export default class InputField extends Phaser.GameObjects.Zone {
                 }
             }
             if (this.pointerOver) {
+                this.scene.registry.get('bringUpKeyboard')();
                 this.editing = true;
             }
             event.stopPropagation();
@@ -67,6 +68,10 @@ export default class InputField extends Phaser.GameObjects.Zone {
 
     update(time, delta) {
         //Period is 0.5 seconds
+        //console.log(document.getElementById('dummy').value);
+        // if (this.editing) {
+        //     this.inputText.setText(document.getElementById('dummy').value);
+        // }
         this.updateChildren();
         if (this.editing) {
             const period = 1000;
