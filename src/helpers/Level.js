@@ -105,17 +105,6 @@ export default class Level {
             }
         }
 
-<<<<<<< HEAD
-        // if (this.playerSprite.body.velocity.x === 0 && this.playerSprite.body.velocity.y === 0) {
-        //     //console.log(this.currentTicks);
-        //     //console.log(" ");
-        // } else {
-        //     //console.log(this.scene.physics.world.stepsLastFrame);
-        //     this.currentTicks += this.scene.physics.world.stepsLastFrame;
-        // }
-
-=======
->>>>>>> cb2791b0c9130324e00339fae75d7c9c08a3ca72
         this.playerSprite.updateSprite(this.keys, time, delta);
         //console.log("yeet");
 
