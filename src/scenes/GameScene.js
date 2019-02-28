@@ -16,8 +16,11 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
+<<<<<<< HEAD
         this.physics.world.setFPS(60);
 
+=======
+>>>>>>> cb2791b0c9130324e00339fae75d7c9c08a3ca72
         this.zoom = 3.5;
 
         this.cam = this.cameras.main;
@@ -30,10 +33,17 @@ class GameScene extends Phaser.Scene {
         this.registry.set('updateViewport', () => this.updateViewport());
 
         this.level.init();
+
+        const origStep = this.physics.world.step.bind(this.physics.world);
+        this.physics.world.step = (delta) => {
+            this.fixedUpdate(0, delta * 1000);
+            origStep(delta);
+        };
     }
 
     update(time, delta) {
         //this.playerSprite.updateSprite(this.keys, time, delta);
+<<<<<<< HEAD
         //this.level.update(time, delta);
         //console.log(typeof this.updateViewpdort);
     }
@@ -41,6 +51,13 @@ class GameScene extends Phaser.Scene {
     fixedUpdate(delta) {
         this.level.update(0, delta);
         //this.level.update(0, delta);
+=======
+        // this.level.update(time, delta);
+    }
+
+    fixedUpdate(time, delta) {
+        this.level.update(time, delta);
+>>>>>>> cb2791b0c9130324e00339fae75d7c9c08a3ca72
     }
 
     updateViewport() {
