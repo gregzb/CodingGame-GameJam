@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import { timingSafeEqual } from 'crypto';
 
 export default class InputField extends Phaser.GameObjects.Zone {
     constructor(scene, x, y, width, height, data) {

@@ -57,6 +57,16 @@
                 "defaultX": 90,
                 "defaultY": 300,
                 "command": "jump"
+            },
+            "changeDirection": {
+                "name": "changeDirection",
+                "shape": "zeroInput",
+                "type": "Movement",
+                "description": "The player will change their direction of movement.",
+                "prefix": "Turn Around",
+                "defaultX": 90,
+                "defaultY": 410,
+                "command": "changeDirection"
             }
         },
         "Control": {
@@ -125,7 +135,7 @@
                     "description": "Make the player begin executing actions.",
                     "numInputs": 0,
                     "prefix": "Start Game",
-                    "defaultX": 350,
+                    "defaultX": 320,
                     "defaultY": 10,
                     "onBoard": true,
                     "command": "doNothing"

@@ -6,6 +6,7 @@ import ButtonManager from "../helpers/ButtonManager";
 import blockData from "../helpers/blockData.json";
 import CodeBlock from "../helpers/CodeBlock";
 import CodeBlockManager from "../helpers/CodeBlockManager";
+import ScrollBar from "../helpers/ScrollBar";
 
 class EditorScene extends Phaser.Scene {
     constructor(test) {
@@ -58,6 +59,28 @@ class EditorScene extends Phaser.Scene {
         })
             .setOrigin(0, 0)
             .setScale(7);
+
+
+
+
+
+        this.scrollBar = new ScrollBar(this, {
+            x: 560,
+            y: 30,
+            width: 20,
+            height: 540,
+            bgColor: 0x5f5f5f,
+            fgColor: 0xcfcfcf,
+            onScroll: (scrollAmount) => {
+                //console.log(scrollAmount);
+                const numBoardBlocks = this.blockManager.boardBlocks.length;
+                if (isFinite(scrollAmount)) {
+                    this.blockManager.startBlock.y = this.blockManager.startBlock.defaultPos.y - (this.scrollBar.value * Phaser.Math.Clamp(numBoardBlocks - 5, 0, Infinity) * 16 * 6);
+                }
+            }
+        });
+
+        
 
         //this.addNewBlock();
         //this.codeBlock = new CodeBlock(this, blockData.blockData.Movement.moveForwardTimed, blockData.blockShapes).setOrigin(0,0).setScale(6);
@@ -116,6 +139,13 @@ class EditorScene extends Phaser.Scene {
     }
 
     update(time, delta) {
+        this.scrollBar.update();
+
+        const numBoardBlocks = this.blockManager.boardBlocks.length + 1;
+        this.scrollBar.setSize(1 - Phaser.Math.Clamp((numBoardBlocks-6) / numBoardBlocks, 0, 1));
+        // console.log((numBoardBlocks-6) / numBoardBlocks);
+        // console.log(1 - Phaser.Math.Clamp((numBoardBlocks-6) / numBoardBlocks, 0, 1));
+
         //this.codeBlock.update(time, delta);
         // for (const codeBlock of this.blocks) {
         //     codeBlock.update(time, delta);

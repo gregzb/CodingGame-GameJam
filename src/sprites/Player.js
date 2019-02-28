@@ -7,7 +7,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
         config.scene.add.existing(this);
         this.alive = true;
 
-        this.body.allowGravity = false;
+        //this.body.allowGravity = false;
 
         this.body.setCollideWorldBounds(true);
 
@@ -37,10 +37,16 @@ export default class Player extends Phaser.GameObjects.Sprite {
             jump: false
         };
 
+        this.movingRight = true;
+
         this.tempSprites = [];
     }
 
     updateSprite(keys, time, delta) {
+
+        //console.log("velocity", this.body.velocity);
+
+        //console.log(this.nextFlipX);
 
         for (const tempSprite of this.tempSprites) {
             if (tempSprite.currentAlpha <= 0) {
@@ -57,7 +63,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
             this.prevInput = this.input;
         }
 
-        this.flipX = this.nextFlipX;
+        //this.flipX = this.nextFlipX;
 
         this.onGround = this.body.blocked.down;
 
@@ -66,6 +72,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
         } else {
             this.body.maxVelocity.x = 150;
         }
+
+        //console.log(this.input);
 
         if (this.input.right) {
             this.body.setAccelerationX(this.acceleration);
@@ -124,14 +132,16 @@ export default class Player extends Phaser.GameObjects.Sprite {
             this.anims.play("dash");
         }
 
-        if (this.nextFlipX != this.flipX) {
-            //this.flipX = this.nextFlipX;
+        /*if (this.nextFlipX != this.flipX) {
+            this.flipX = this.nextFlipX;
         } else {
             this.nextFlipX =
                 this.body.velocity.x === 0
                     ? this.prevFlipX
                     : this.body.velocity.x < 0;
-        }
+        }*/
+
+        this.flipX = this.body.velocity.x === 0 ? this.prevFlipX : this.body.velocity.x < 0;
 
         this.prevRunning = this.running;
         this.prevGround = this.onGround;
@@ -165,8 +175,12 @@ export default class Player extends Phaser.GameObjects.Sprite {
         if (this.input.right || this.input.left) {
             return;
         }
-        this.input.right = !this.flipX;
-        this.input.left = this.flipX;
+        this.input.right = this.movingRight;
+        this.input.left = !this.movingRight;
+    }
+
+    isMovingForward() {
+        return this.input.right || this.input.left;
     }
 
     stopMoving() {
@@ -174,7 +188,11 @@ export default class Player extends Phaser.GameObjects.Sprite {
     }
 
     changeDirection() {
-        this.nextFlipX = !this.flipX;
+        this.movingRight = !this.movingRight;
+        if (this.isMovingForward) {
+            this.input.right = this.movingRight;
+            this.input.left = !this.movingRight;
+        }
     }
 
     extJump() {

@@ -83,8 +83,11 @@ export default class Level {
     }
 
     update(time, delta) {
+        //console.log(delta * 1000);
+        //console.log("executeLOL\n\n\n\n\n\n\n\n");
         this.waitingTime -= delta;
         if (this.executing && this.waitingTime <= 0) {
+            //console.log("executeLOL\n\n\n\n\n\n\n\n");
             this.currentBlock = this.currentBlock.nextBlock;
             if (this.currentBlock !== null) {
                 const func = this.currentBlock.command;
@@ -102,15 +105,16 @@ export default class Level {
             }
         }
 
-        if (this.playerSprite.body.velocity.x === 0 && this.playerSprite.body.velocity.y === 0) {
-            //console.log(this.currentTicks);
-            console.log(" ");
-        } else {
-            console.log(this.scene.physics.world.stepsLastFrame);
-            this.currentTicks += this.scene.physics.world.stepsLastFrame;
-        }
+        // if (this.playerSprite.body.velocity.x === 0 && this.playerSprite.body.velocity.y === 0) {
+        //     //console.log(this.currentTicks);
+        //     //console.log(" ");
+        // } else {
+        //     //console.log(this.scene.physics.world.stepsLastFrame);
+        //     this.currentTicks += this.scene.physics.world.stepsLastFrame;
+        // }
 
         this.playerSprite.updateSprite(this.keys, time, delta);
+        //console.log("yeet");
 
 
         //this.playerSprite.changeDirection();
@@ -142,6 +146,10 @@ export default class Level {
         this.playerSprite.dash();
     }
 
+    changeDirection() {
+        this.playerSprite.changeDirection();
+    }
+
     delay(amount) {
         //console.log("Delated: " + amount);
         this.waitingTime = amount * 1000;
@@ -156,6 +164,9 @@ export default class Level {
         this.currentBlock = this.startingBlock;
         this.executing = true;
         this.currentTicks = 0;
+        //this.waitingTime = 500;
+        //console.log(this);
+        // console.log("executeLOL\n\n\n\n\n\n\n\n");
     }
 
     stopInstructions() {
@@ -174,6 +185,9 @@ export default class Level {
         this.playerSprite.body.setAcceleration(0, 0);
         this.playerSprite.body.velocity.x = 0;
         this.playerSprite.body.velocity.y = 0;
+
+        this.playerSprite.flipX = this.playerSprite.nextFlipX = this.playerSprite.prevFlipX = false;
+        this.playerSprite.movingRight = true;
     }
 
     clearResources() {

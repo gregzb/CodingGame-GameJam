@@ -16,7 +16,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
-        this.physics.world.setFPS(9);
+        this.physics.world.setFPS(60);
 
         this.zoom = 3.5;
 
@@ -34,7 +34,13 @@ class GameScene extends Phaser.Scene {
 
     update(time, delta) {
         //this.playerSprite.updateSprite(this.keys, time, delta);
-        this.level.update(time, delta);
+        //this.level.update(time, delta);
+        //console.log(typeof this.updateViewpdort);
+    }
+
+    fixedUpdate(delta) {
+        this.level.update(0, delta);
+        //this.level.update(0, delta);
     }
 
     updateViewport() {
