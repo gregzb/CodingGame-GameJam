@@ -1,13 +1,25 @@
-import Phaser from 'phaser';
-import InputField from './InputField.js';
+import Phaser from "phaser";
+import InputField from "./InputField.js";
 
 export default class CodeBlock extends Phaser.GameObjects.Image {
-    constructor(scene, data, shapes) {
+    static get nextID() {
+        CodeBlock.currentID = CodeBlock.currentID | 0;
+        const currentID = CodeBlock.currentID;
+        CodeBlock.currentID++;
+        return currentID;
+    }
+
+    constructor(scene, data, shapes, manager) {
         super(scene, data.defaultX, data.defaultY, shapes[data.shape].texture);
+        this.manager = manager;
+        //console.log(this.manager);
         this.scene = scene;
         this.scene.add.existing(this);
         this.scene.physics.world.enable(this);
         this.body.setAllowGravity(false);
+
+        this.id = CodeBlock.nextID;
+        //console.log("ID: " + this.id);
 
         this.command = data.command;
 
@@ -28,38 +40,83 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         this.nextBlock = null;
 
         if (this.shape.draggable) {
-            this.on('dragstart', (pointer, dragX, dragY) => this.onDragStart(pointer, dragX, dragY));
-            this.on('drag', (pointer, dragX, dragY) => this.onDrag(pointer, dragX, dragY));
-            this.on('dragend', (pointer, dragX, dragY) => this.onDragEnd(pointer, dragX, dragY));
+            this.on("dragstart", (pointer, dragX, dragY) =>
+                this.onDragStart(pointer, dragX, dragY)
+            );
+            this.on("drag", (pointer, dragX, dragY) =>
+                this.onDrag(pointer, dragX, dragY)
+            );
+            this.on("dragend", (pointer, dragX, dragY) =>
+                this.onDragEnd(pointer, dragX, dragY)
+            );
             //this.on('drop', (pointer, target) => this.onDrop(pointer, target));
         }
 
-        this.prefixText = this.scene.add.bitmapText(this.x + 25, this.y + 10, 'default', this.prefix, 40);
-        if (this.shape.hasOwnProperty('suffixOffsetX')) {
-            this.suffixText = this.scene.add.bitmapText(this.x + 25, this.y + 60, 'default', this.suffix, 40);
+        this.prefixText = this.scene.add.bitmapText(
+            this.x + 25,
+            this.y + 10,
+            "default",
+            this.prefix,
+            40
+        );
+        if (this.shape.hasOwnProperty("suffixOffsetX")) {
+            this.suffixText = this.scene.add.bitmapText(
+                this.x + 25,
+                this.y + 60,
+                "default",
+                this.suffix,
+                40
+            );
         }
-        if (this.shape.hasOwnProperty('inputOffsetX')) {
-            this.inputField = new InputField(this.scene, this.x + 18, this.y + 32, 158, 23, { parent: this, defaultText: '1', validKeyList: '0123456789.'.split('') }).setOrigin(0, 0);
+        if (this.shape.hasOwnProperty("inputOffsetX")) {
+            this.inputField = new InputField(
+                this.scene,
+                this.x + 18,
+                this.y + 32,
+                158,
+                23,
+                {
+                    parent: this,
+                    defaultText: "1",
+                    validKeyList: "0123456789.".split("")
+                }
+            ).setOrigin(0, 0);
         }
 
         //console.log(this.getBounds());
 
-        this.zone = this.scene.add.zone(this.x, this.y + this.height * 6 - 8 * 2, this.width * 6, 8 * 4).setDropZone().setOrigin(0, 0);
+        this.zone = this.scene.add
+            .zone(
+                this.x,
+                this.y + this.height * 6 - 8 * 2,
+                this.width * 6,
+                8 * 4
+            )
+            .setDropZone()
+            .setOrigin(0, 0);
         this.zone.block = this;
         this.scene.physics.world.enable(this.zone);
         this.zone.body.setAllowGravity(false);
-        if (this.scene.registry.get('blockZones')) {
-            this.scene.registry.set('blockZones', this.scene.registry.get('blockZones').concat(this.zone));
+        if (this.scene.registry.get("blockZones")) {
+            this.scene.registry.set(
+                "blockZones",
+                this.scene.registry.get("blockZones").concat(this.zone)
+            );
         } else {
-            this.scene.registry.set('blockZones', [this.zone]);
+            this.scene.registry.set("blockZones", [this.zone]);
         }
 
         //  Just a visual display of the drop zone
         this.graphics = this.scene.add.graphics();
         this.graphics.setVisible(false);
         this.graphics.lineStyle(2, 0xffff00);
-        this.graphics.strokeRect(this.zone.x + this.zone.input.hitArea.x, this.zone.y + this.zone.input.hitArea.y, this.zone.input.hitArea.width, this.zone.input.hitArea.height);
-    
+        this.graphics.strokeRect(
+            this.zone.x + this.zone.input.hitArea.x,
+            this.zone.y + this.zone.input.hitArea.y,
+            this.zone.input.hitArea.width,
+            this.zone.input.hitArea.height
+        );
+
         this.onBoard = false;
         this.setOnBoard(data.onBoard, this.previousBlock);
     }
@@ -82,7 +139,7 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         if (prevBlock !== null) {
             prevBlock.nextBlock = this;
             prevBlock.disableSnapZone();
-        } else if (this.previousBlock !== null){
+        } else if (this.previousBlock !== null) {
             this.previousBlock.nextBlock = null;
             this.previousBlock.enableSnapZone();
         }
@@ -101,7 +158,6 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
     }
 
     updateChildren(time, delta) {
-
         if (this.nextBlock) {
             this.nextBlock.update(time, delta);
         }
@@ -114,7 +170,12 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         if (this.graphics.scene) {
             this.graphics.clear();
             this.graphics.lineStyle(2, 0xffff00);
-            this.graphics.strokeRect(this.zone.x + this.zone.input.hitArea.x, this.zone.y + this.zone.input.hitArea.y, this.zone.input.hitArea.width, this.zone.input.hitArea.height);
+            this.graphics.strokeRect(
+                this.zone.x + this.zone.input.hitArea.x,
+                this.zone.y + this.zone.input.hitArea.y,
+                this.zone.input.hitArea.width,
+                this.zone.input.hitArea.height
+            );
         }
 
         if (this.prefixText.scene) {
@@ -122,11 +183,11 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
             this.prefixText.y = this.y + this.shape.prefixOffsetY;
         }
 
-        if (this.shape.hasOwnProperty('suffixOffsetX')) {
+        if (this.shape.hasOwnProperty("suffixOffsetX")) {
             this.suffixText.x = this.x + this.shape.suffixOffsetX;
             this.suffixText.y = this.y + this.shape.suffixOffsetY;
         }
-        if (this.shape.hasOwnProperty('inputOffsetX')) {
+        if (this.shape.hasOwnProperty("inputOffsetX")) {
             this.inputField.x = this.x + this.shape.inputOffsetX;
             this.inputField.y = this.y + this.shape.inputOffsetY;
             this.inputField.update(time, delta);
@@ -177,7 +238,14 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         //     //console.log(this);
         // }
 
-        if (!this.scene.physics.overlap(this, this.scene.registry.get('blockZones'), (object1, object2) => this.onOverlap(object1, object2), (object1, object2) => this.collideExtra(object1, object2))) {
+        if (
+            !this.scene.physics.overlap(
+                this,
+                this.scene.registry.get("blockZones"),
+                (object1, object2) => this.onOverlap(object1, object2),
+                (object1, object2) => this.collideExtra(object1, object2)
+            )
+        ) {
             if (this.wasOnBoard) {
                 this.clearResources();
             }
@@ -214,5 +282,8 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         this.prefixText && this.prefixText.destroy();
         this.suffixText && this.suffixText.destroy();
         this.destroy();
+        if (this.wasOnBoard || this.onBoard) {
+            this.manager.removeFromBoard(this.id);
+        }
     }
 }

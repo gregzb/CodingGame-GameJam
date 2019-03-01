@@ -6,13 +6,19 @@ export default class CodeBlockManager {
         this.scene = scene;
         this.blockData = blockData;
 
-        this.startBlock = new CodeBlock(this.scene, this.blockData.blockData.Misc.startGame, this.blockData.blockShapes).setOrigin(0,0).setScale(6);
-        //console.log(Object.keys(this.blockData.blockData));
+        this.startBlock = new CodeBlock(this.scene, this.blockData.blockData.Misc.startGame, this.blockData.blockShapes, this).setOrigin(0,0).setScale(6);
+        console.log(this);
         //const blockTypes = this.blockData.blockData;
         this.currentBlocks = [];
         this.boardBlocks = [];
         this.setToolbar('Movement');
         //this.currentToolBar = 'Movement';
+    }
+
+    removeFromBoard(blockID) {
+        this.boardBlocks.splice(this.boardBlocks.findIndex( (block) => {
+            return block.id === blockID;
+        }), 1);
     }
 
     setToolbar(newToolBar) {
@@ -32,7 +38,7 @@ export default class CodeBlockManager {
         const currentBlocksData = this.blockData.blockData[this.currentToolBar];
         for (const blockName of Object.keys(currentBlocksData)) {
             const blockData = currentBlocksData[blockName];
-            this.currentBlocks.push(new CodeBlock(this.scene, blockData, this.blockData.blockShapes).setOrigin(0,0).setScale(6));
+            this.currentBlocks.push(new CodeBlock(this.scene, blockData, this.blockData.blockShapes, this).setOrigin(0,0).setScale(6));
             //console.log(blockData);
         }
     }

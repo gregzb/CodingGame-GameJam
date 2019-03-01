@@ -101,6 +101,19 @@ export default class ScrollBar extends Phaser.GameObjects.Graphics {
 
     update(time, delta) {
         //console.log(this.value);
+        const newY = Phaser.Math.Clamp(this.hitArea.y, this.data.y+4, this.data.y+4 + (this.data.height - 8) * (1-this.size));
+        if (Math.abs(newY - this.hitArea.y) > 0.00001) {
+            this.hitArea.y = newY;
+            this.value = (this.hitArea.y - (this.data.y + 4)) / ((this.data.height - 8) * (1-this.size));
+            this.data.onScroll(this.value);
+        }
+        // console.log(this.value);
+        // console.log(Math.abs((this.hitArea.y - (this.data.y + 4)) / ((this.data.height - 8) * (1-this.size)) - this.value));
+        // if (Math.abs((this.hitArea.y - (this.data.y + 4)) / ((this.data.height - 8) * (1-this.size)) - this.value) > 0.00001) {
+        //     this.value = (this.hitArea.y - (this.data.y + 4)) / ((this.data.height - 8) * (1-this.size));
+        //     this.data.onScroll(this.value);
+        // }
+
         this.clear();
         this.fillStyle(this.data.bgColor);
         this.fillRoundedRect(this.data.x, this.data.y, this.data.width, this.data.height, 10);

@@ -22,10 +22,10 @@ const config = {
             gravity: {
                 y: 800
             },
-            debug: false
-            // debug: true,
-            // debugShowBody: true,
-            // debugShowStaticBody: true
+            //debug: false,
+            //debug: true,
+            //debugShowBody: true,
+            //debugShowStaticBody: true
         }
     },
     scene: [

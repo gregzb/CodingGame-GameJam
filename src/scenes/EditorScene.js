@@ -73,9 +73,11 @@ class EditorScene extends Phaser.Scene {
             fgColor: 0xcfcfcf,
             onScroll: (scrollAmount) => {
                 //console.log(scrollAmount);
-                const numBoardBlocks = this.blockManager.boardBlocks.length;
+                const numBoardBlocks = this.blockManager.boardBlocks.length + 1;
                 if (isFinite(scrollAmount)) {
-                    this.blockManager.startBlock.y = this.blockManager.startBlock.defaultPos.y - (this.scrollBar.value * Phaser.Math.Clamp(numBoardBlocks - 5, 0, Infinity) * 16 * 6);
+                    this.blockManager.startBlock.y = this.blockManager.startBlock.defaultPos.y - (this.scrollBar.value * (Phaser.Math.Clamp(numBoardBlocks - 6, 0, Infinity) * 14 * 6 + 7 * 6));
+                } else {
+                    this.blockManager.startBlock.y = this.blockManager.startBlock.defaultPos.y;
                 }
             }
         });
