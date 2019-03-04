@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
-import { timingSafeEqual } from 'crypto';
+import {
+    timingSafeEqual
+} from 'crypto';
 
-export default class Button extends Phaser.GameObjects.Image{
+export default class Button extends Phaser.GameObjects.Image {
 
     constructor(config) {
         if (config.frame) {
@@ -9,6 +11,8 @@ export default class Button extends Phaser.GameObjects.Image{
         } else {
             super(config.scene, config.x, config.y, config.texture);
         }
+
+        this.masked = config.masked | false;
 
         this.startX = this.x;
         this.startY = this.y;
@@ -18,7 +22,9 @@ export default class Button extends Phaser.GameObjects.Image{
 
         this.scene = config.scene;
 
-        this.setInteractive({useHandCursor: true});
+        this.setInteractive({
+            useHandCursor: true
+        });
         this.on('pointerover', () => this.onPointerOver());
         this.on('pointerout', () => this.onPointerOut());
         this.on('pointerup', () => this.onPointerUp());
@@ -42,10 +48,12 @@ export default class Button extends Phaser.GameObjects.Image{
 
         const pointer = this.scene.input.activePointer;
 
-        if (pointer.y < 110) {
-            this.disableInteractive();
-        } else {
-            this.setInteractive();
+        if (this.masked) {
+            if (pointer.y < 110) {
+                this.disableInteractive();
+            } else {
+                this.setInteractive();
+            }
         }
 
         if (this.isActive) {

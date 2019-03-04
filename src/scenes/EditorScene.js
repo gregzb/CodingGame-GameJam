@@ -9,17 +9,20 @@ import CodeBlockManager from "../helpers/CodeBlockManager";
 import ScrollBar from "../helpers/ScrollBar";
 
 class EditorScene extends Phaser.Scene {
-    constructor(test) {
+    constructor(config) {
         super({
             key: "EditorScene"
         });
+        //console.log(config);
     }
 
     preload() {
         //this.load.scenePlugin('animatedTiles', AnimatedTiles, 'animatedTiles', 'animatedTiles');
     }
 
-    create() {
+    create(config) {
+
+        //console.log(config);
 
         //this.physics.world.TILE_BIAS = 32;
         //this.physics.world.setFPS(1);
@@ -28,7 +31,7 @@ class EditorScene extends Phaser.Scene {
 
         this.zoom = 1;
 
-        this.gameScene = this.scene.launch("GameScene");
+        this.gameScene = this.scene.launch("GameScene", config);
         this.gameUIScene = this.scene.launch("GameUIScene");
         this.cam = this.cameras.main;
 
@@ -81,6 +84,15 @@ class EditorScene extends Phaser.Scene {
                 }
             }
         });
+
+        this.backButton = new Button({
+            scene: this, 
+            x: 0, 
+            y: this.cam.height, 
+            texture: 'backButton',
+            canSetActive: false,
+            buttonPressed: (button) => this.buttonPressed(button)
+        }).setOrigin(0, 1).setScale(5);
 
         
 
@@ -136,8 +148,12 @@ class EditorScene extends Phaser.Scene {
                     : "FullscreenButton.png"
             );
             this.scale.toggleFullscreen();
+        } else if (button.texture.key === "backButton") {
+            this.scene.stop("GameUIScene");
+            this.scene.stop("GameScene");
+            this.scene.start("MainMenuScene");
         }
-        console.log("Button " + button + " was pressed");
+        //console.log("Button " + button + " was pressed");
     }
 
     update(time, delta) {

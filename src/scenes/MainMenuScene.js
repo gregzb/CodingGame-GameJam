@@ -28,7 +28,7 @@ class MainMenuScene extends Phaser.Scene {
             bgColor: 0x5f5f5f,
             fgColor: 0xcfcfcf,
             onScroll: (scrollAmount) => {
-                console.log(scrollAmount);
+                //console.log(scrollAmount);
                 // const numBoardBlocks = this.blockManager.boardBlocks.length + 1;
                 // if (Number.isFinite(scrollAmount)) {
                 //     this.blockManager.startBlock.y = this.blockManager.startBlock.defaultPos.y - (this.scrollBar.value * (Phaser.Math.Clamp(numBoardBlocks - 6, 0, Infinity) * 14 * 6 + 7 * 6));
@@ -84,6 +84,7 @@ class MainMenuScene extends Phaser.Scene {
                 offsetY: 30,
                 text: "Level " + (i + 1),
                 textSize: 85,
+                masked: true,
                 buttonPressed: (button) => this.buttonPressed(button)
             }).setOrigin(0.5, 0).setScale(6).setMask(this.levelMask));
         }
@@ -100,6 +101,9 @@ class MainMenuScene extends Phaser.Scene {
         else if (button.text){
             if (button.text.text === "Play") {
                 this.nextState = "levelSelection";
+            } else if (button.text.text.includes("Level")) {
+                const level = Number.parseInt(button.text.text.split(' ')[1]) - 1;
+                this.scene.start("EditorScene", {level: level});
             }
         }
     }

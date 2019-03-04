@@ -15,9 +15,9 @@ export default class Level {
         this.currentTicks = 0;
     }
 
-    init() {
+    init(config) {
         this.map = this.scene.make.tilemap({
-            key: 'map'
+            key: 'map' + config.level
         });
         this.tileset = this.map.addTilesetImage('Tileset', 'tiles');
         this.winset = this.map.addTilesetImage('spritesheet', 'win');
@@ -117,9 +117,15 @@ export default class Level {
         //console.log("executeLOL\n\n\n\n\n\n\n\n");
         //console.log(this.zone);
 
+        //console.log(this.executing, this.waitingTime);
+
         this.waitingTime -= delta;
+
+        //console.log(delta);
+
         if (this.executing && this.waitingTime <= 0) {
             //console.log("executeLOL\n\n\n\n\n\n\n\n");
+            console.log("inside");
             this.currentBlock = this.currentBlock.nextBlock;
             if (this.currentBlock !== null) {
                 const func = this.currentBlock.command;
@@ -163,6 +169,7 @@ export default class Level {
 
     moveForward() {
         this.playerSprite.moveForward();
+        console.log("yurt");
     }
 
     stopMoving() {

@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 class ResourceLoaderScene extends Phaser.Scene {
-    constructor(test) {
+    constructor(config) {
         super({
             key: 'ResourceLoaderScene'
         });
@@ -26,7 +26,8 @@ class ResourceLoaderScene extends Phaser.Scene {
         });
 
         // Tilemap with a lot of objects and tile-properties tricks
-        this.load.tilemapTiledJSON('map', 'assets/tilemaps/levels/level1.json');
+        this.load.tilemapTiledJSON('map0', 'assets/tilemaps/levels/level1.json');
+        this.load.tilemapTiledJSON('map1', 'assets/tilemaps/levels/level2.json');
 
         /*this.load.spritesheet('tiles', 'assets/tilemaps/map2/Tileset.png', {
             frameWidth: 16,

@@ -5,7 +5,7 @@ import Level from '../helpers/Level';
 import { throws } from 'assert';
 
 class GameScene extends Phaser.Scene {
-    constructor(test) {
+    constructor(config) {
         super({
             key: 'GameScene'
         });
@@ -15,7 +15,7 @@ class GameScene extends Phaser.Scene {
         this.level = new Level(this);
     }
 
-    create() {
+    create(config) {
 
         this.physics.world.TILE_BIAS = 32;
 
@@ -32,7 +32,7 @@ class GameScene extends Phaser.Scene {
 
         this.registry.set('updateViewport', () => this.updateViewport());
 
-        this.level.init();
+        this.level.init(config);
 
         const origStep = this.physics.world.step.bind(this.physics.world);
         this.physics.world.step = (delta) => {

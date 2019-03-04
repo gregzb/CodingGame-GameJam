@@ -1,16 +1,16 @@
 import Phaser from 'phaser';
 
 export default class ScrollBar extends Phaser.GameObjects.Graphics {
-    constructor(scene, data) {
+    constructor(scene, config) {
         super(scene);
         this.scene = scene;
         this.scene.add.existing(this);
 
-        //Data should have x, y, width, height, scrollCallback from 0 to 1, colors
-        this.data = data;
+        //config should have x, y, width, height, scrollCallback from 0 to 1, colors
+        this.config = config;
 
         //this.size = 1;
-        this.hitArea = new Phaser.Geom.Rectangle(this.data.x + 4, this.data.y + 4, this.data.width - 8, this.data.height - 8);
+        this.hitArea = new Phaser.Geom.Rectangle(this.config.x + 4, this.config.y + 4, this.config.width - 8, this.config.height - 8);
 
         this.value = 0;
 
@@ -60,16 +60,16 @@ export default class ScrollBar extends Phaser.GameObjects.Graphics {
             //console.log(this.hitArea.height);
             //console.log(dragX, dragY);
             //console.log(Object.assign({}, pointer));
-            this.hitArea.y = Phaser.Math.Clamp(this.startDrag.y + dragY, this.data.y+4, this.data.y+4 + (this.data.height - 8) * (1-this.size));
-            this.value = (this.hitArea.y - (this.data.y + 4)) / ((this.data.height - 8) * (1-this.size));
-            this.data.onScroll(this.value);
+            this.hitArea.y = Phaser.Math.Clamp(this.startDrag.y + dragY, this.config.y+4, this.config.y+4 + (this.config.height - 8) * (1-this.size));
+            this.value = (this.hitArea.y - (this.config.y + 4)) / ((this.config.height - 8) * (1-this.size));
+            this.config.onScroll(this.value);
             this.updateHitbox();
         });
 
-        // this.displayOriginX = this.data.x;
-        // this.displayOriginY = this.data.y;
-        // this.scrollPart.displayOriginX = this.data.x + 4;
-        // this.scrollPart.displayOriginY = this.data.y + 4;
+        // this.displayOriginX = this.config.x;
+        // this.displayOriginY = this.config.y;
+        // this.scrollPart.displayOriginX = this.config.x + 4;
+        // this.scrollPart.displayOriginY = this.config.y + 4;
 
         // this.scrollPart.on('pointerover', (pointer, x, y, event) => {
         //     console.log('pointer is over');
@@ -88,7 +88,7 @@ export default class ScrollBar extends Phaser.GameObjects.Graphics {
 
     setSize(newSize) {
         this.size = Phaser.Math.Clamp(newSize, 0, 1);
-        this.hitArea.height = (this.data.height - 8) * this.size;
+        this.hitArea.height = (this.config.height - 8) * this.size;
         this.updateHitbox();
     }
 
@@ -98,30 +98,30 @@ export default class ScrollBar extends Phaser.GameObjects.Graphics {
 
     updateChildren() {
         this.scrollPart.clear();
-        this.scrollPart.fillStyle(this.data.fgColor);
-        //this.scrollPart.fillRoundedRect(this.data.x + 4, this.data.y + 4, this.data.width - 8, this.data.height - 8, 8);
+        this.scrollPart.fillStyle(this.config.fgColor);
+        //this.scrollPart.fillRoundedRect(this.config.x + 4, this.config.y + 4, this.config.width - 8, this.config.height - 8, 8);
         this.scrollPart.fillRoundedRect(this.hitArea.x, this.hitArea.y, this.hitArea.width, this.hitArea.height, 8);
         
     }
 
     update(time, delta) {
         //console.log(this.value);
-        const newY = Phaser.Math.Clamp(this.hitArea.y, this.data.y+4, this.data.y+4 + (this.data.height - 8) * (1-this.size));
+        const newY = Phaser.Math.Clamp(this.hitArea.y, this.config.y+4, this.config.y+4 + (this.config.height - 8) * (1-this.size));
         if (Math.abs(newY - this.hitArea.y) > 0.00001) {
             this.hitArea.y = newY;
-            this.value = (this.hitArea.y - (this.data.y + 4)) / ((this.data.height - 8) * (1-this.size));
-            this.data.onScroll(this.value);
+            this.value = (this.hitArea.y - (this.config.y + 4)) / ((this.config.height - 8) * (1-this.size));
+            this.config.onScroll(this.value);
         }
         // console.log(this.value);
-        // console.log(Math.abs((this.hitArea.y - (this.data.y + 4)) / ((this.data.height - 8) * (1-this.size)) - this.value));
-        // if (Math.abs((this.hitArea.y - (this.data.y + 4)) / ((this.data.height - 8) * (1-this.size)) - this.value) > 0.00001) {
-        //     this.value = (this.hitArea.y - (this.data.y + 4)) / ((this.data.height - 8) * (1-this.size));
-        //     this.data.onScroll(this.value);
+        // console.log(Math.abs((this.hitArea.y - (this.config.y + 4)) / ((this.config.height - 8) * (1-this.size)) - this.value));
+        // if (Math.abs((this.hitArea.y - (this.config.y + 4)) / ((this.config.height - 8) * (1-this.size)) - this.value) > 0.00001) {
+        //     this.value = (this.hitArea.y - (this.config.y + 4)) / ((this.config.height - 8) * (1-this.size));
+        //     this.config.onScroll(this.value);
         // }
 
         this.clear();
-        this.fillStyle(this.data.bgColor);
-        this.fillRoundedRect(this.data.x, this.data.y, this.data.width, this.data.height, 10);
+        this.fillStyle(this.config.bgColor);
+        this.fillRoundedRect(this.config.x, this.config.y, this.config.width, this.config.height, 10);
         this.updateChildren();
     }
 
