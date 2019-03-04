@@ -2,6 +2,7 @@ import AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.min.js';
 import Phaser from 'phaser';
 import Player from '../sprites/Player';
 import Level from '../helpers/Level';
+import { throws } from 'assert';
 
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -18,13 +19,15 @@ class GameScene extends Phaser.Scene {
 
         this.physics.world.TILE_BIAS = 32;
 
-        this.zoom = 3.5;
+        //this.zoom = 3.5;
+        this.initialZoom = 2.0;
+        this.gameZoom = 3.5;
 
         this.cam = this.cameras.main;
 
         this.cam.roundPixels = true;
         this.cam.setViewport(600, 0, 200, 600);
-        this.cam.zoomTo(this.zoom, 0);
+        this.cam.zoomTo(this.initialZoom, 0);
         this.cam.setBackgroundColor(0x7fbfff);
 
         this.registry.set('updateViewport', () => this.updateViewport());

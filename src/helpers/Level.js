@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import Player from '../sprites/Player';
 import AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.min.js';
-import { throws } from 'assert';
 
 export default class Level {
     constructor(scene, data) {
@@ -21,9 +20,17 @@ export default class Level {
             key: 'map'
         });
         this.tileset = this.map.addTilesetImage('Tileset', 'tiles');
-        this.groundLayer = this.map.createDynamicLayer('Land', this.tileset, 0, 0);
+        this.winset = this.map.addTilesetImage('spritesheet', 'win');
+        this.groundLayer = this.map.createStaticLayer('Land', this.tileset, 0, 0);
+        this.otherLayer = this.map.createDynamicLayer('Goal', this.winset, 0, 0);
+
+        //this.objectLayer = this.map.getObjectLayer('enemies');
 
         this.groundLayer.setCollisionBetween(0, 100);
+
+        //this.otherLayer.setCollisionBetween(0, 100);
+
+        //console.log(this.scene.sys.animatedTiles);
 
         this.scene.sys.animatedTiles.init(this.map);
 
@@ -69,6 +76,24 @@ export default class Level {
 
         // This will watch the player and worldLayer every frame to check for collisions
         this.scene.physics.add.collider(this.playerSprite, this.groundLayer);
+        //this.scene.physics.add.overlap(this.playerSprite, this.otherLayer, (object1, object2) => this.onWin(object1, object2));
+
+        this.objectLayer = this.map.getObjectLayer('levelInfo');
+        const objects = this.objectLayer.objects;
+        objects.forEach(object => {
+            if (object.name === "SpawnPoint") {
+                this.playerSprite.x = object.x;
+                this.playerSprite.y = object.y;
+                this.playerSprite.startPosX = object.x;
+                this.playerSprite.startPosY = object.y;
+            } else if (object.name === "GoalArea") {
+                const winZone = this.scene.add.zone(object.x, object.y, object.width, object.height).setOrigin(0, 0);
+                this.scene.physics.world.enable(winZone);
+                winZone.body.setAllowGravity(false);
+
+                this.scene.physics.add.overlap(this.playerSprite, winZone, (object1, object2) => this.onWin(object1, object2));
+            }
+        });
 
         //this.scene.cam.centerOn(0, 0);
         this.scene.cam.startFollow(this.playerSprite, true, 0.25, 0.25);
@@ -82,9 +107,16 @@ export default class Level {
         //this.dashed = false;
     }
 
+    onWin(object1, object2) {
+        console.log("Player has beaten this level.");
+        this.executing = false;
+    }
+
     update(time, delta) {
         //console.log(delta * 1000);
         //console.log("executeLOL\n\n\n\n\n\n\n\n");
+        //console.log(this.zone);
+
         this.waitingTime -= delta;
         if (this.executing && this.waitingTime <= 0) {
             //console.log("executeLOL\n\n\n\n\n\n\n\n");
@@ -92,17 +124,24 @@ export default class Level {
             if (this.currentBlock !== null) {
                 const func = this.currentBlock.command;
 
-                console.log(func);
-
                 let args = [];
                 if (this.currentBlock.inputField) {
-                    args.push(Number.parseFloat(this.currentBlock.inputField.inputText.text));
+                    const inputNum = Number.parseFloat(this.currentBlock.inputField.inputText.text);
+                    if (Number.isFinite(inputNum)) {
+                        args.push(inputNum);
+                    } else {
+                        args.push(0);
+                    }
                 }
+
+                console.log(func + ": " + args.toString());
 
                 this[func].apply(this, args);
             } else {
                 this.executing = false;
             }
+        } else if (!this.executing) {
+            this.scene.cam.zoomTo(this.scene.initialZoom, 500, "Power2", true);
         }
 
         this.playerSprite.updateSprite(this.keys, time, delta);
@@ -156,6 +195,9 @@ export default class Level {
         this.currentBlock = this.startingBlock;
         this.executing = true;
         this.currentTicks = 0;
+
+        this.scene.cam.zoomTo(this.scene.gameZoom, 500, "Power2", true);
+
         //this.waitingTime = 500;
         //console.log(this);
         // console.log("executeLOL\n\n\n\n\n\n\n\n");
@@ -180,6 +222,8 @@ export default class Level {
 
         this.playerSprite.flipX = this.playerSprite.nextFlipX = this.playerSprite.prevFlipX = false;
         this.playerSprite.movingRight = true;
+
+        this.scene.cam.zoomTo(this.scene.initialZoom, 500, "Power2", true);
     }
 
     clearResources() {

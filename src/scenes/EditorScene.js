@@ -48,17 +48,17 @@ class EditorScene extends Phaser.Scene {
         //this.addNewBlock();
         this.blockManager = new CodeBlockManager(this);
 
-        this.fullscreenButton = new Button({
-            scene: this,
-            x: 11,
-            y: 538,
-            texture: "fullscreenButtons",
-            frame: 0,
-            canSetActive: false,
-            buttonPressed: button => this.buttonPressed(button)
-        })
-            .setOrigin(0, 0)
-            .setScale(7);
+        // this.fullscreenButton = new Button({
+        //     scene: this,
+        //     x: 11,
+        //     y: 538,
+        //     texture: "fullscreenButtons",
+        //     frame: 0,
+        //     canSetActive: false,
+        //     buttonPressed: button => this.buttonPressed(button)
+        // })
+        //     .setOrigin(0, 0)
+        //     .setScale(7);
 
 
 
@@ -74,7 +74,7 @@ class EditorScene extends Phaser.Scene {
             onScroll: (scrollAmount) => {
                 //console.log(scrollAmount);
                 const numBoardBlocks = this.blockManager.boardBlocks.length + 1;
-                if (isFinite(scrollAmount)) {
+                if (Number.isFinite(scrollAmount)) {
                     this.blockManager.startBlock.y = this.blockManager.startBlock.defaultPos.y - (this.scrollBar.value * (Phaser.Math.Clamp(numBoardBlocks - 6, 0, Infinity) * 14 * 6 + 7 * 6));
                 } else {
                     this.blockManager.startBlock.y = this.blockManager.startBlock.defaultPos.y;

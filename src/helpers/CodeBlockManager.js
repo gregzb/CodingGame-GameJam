@@ -7,7 +7,7 @@ export default class CodeBlockManager {
         this.blockData = blockData;
 
         this.startBlock = new CodeBlock(this.scene, this.blockData.blockData.Misc.startGame, this.blockData.blockShapes, this).setOrigin(0,0).setScale(6);
-        console.log(this);
+        //console.log(this);
         //const blockTypes = this.blockData.blockData;
         this.currentBlocks = [];
         this.boardBlocks = [];

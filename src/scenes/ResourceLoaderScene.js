@@ -26,7 +26,7 @@ class ResourceLoaderScene extends Phaser.Scene {
         });
 
         // Tilemap with a lot of objects and tile-properties tricks
-        this.load.tilemapTiledJSON('map', 'assets/tilemaps/map2/newtestmap.json');
+        this.load.tilemapTiledJSON('map', 'assets/tilemaps/levels/level1.json');
 
         /*this.load.spritesheet('tiles', 'assets/tilemaps/map2/Tileset.png', {
             frameWidth: 16,
@@ -34,7 +34,8 @@ class ResourceLoaderScene extends Phaser.Scene {
             spacing: 0
         });*/
 
-        this.load.image('tiles', 'assets/tilemaps/map2/Tileset.png');
+        this.load.image('tiles', 'assets/tilemaps/levels/Tileset.png');
+        this.load.image('win', 'assets/tilemaps/levels/spritesheet.png');
 
         this.load.atlas('player', 'assets/spritesheets/mortmort/spritesheet.png', 'assets/spritesheets/mortmort/spritesheet.json');
         this.load.atlas('fullscreenButtons', 'assets/spritesheets/fullscreenButtons/spritesheet.png', 'assets/spritesheets/fullscreenButtons/spritesheet.json');
