@@ -141,6 +141,7 @@ class EditorScene extends Phaser.Scene {
     }
 
     update(time, delta) {
+
         this.scrollBar.update();
 
         const numBoardBlocks = this.blockManager.boardBlocks.length + 1;

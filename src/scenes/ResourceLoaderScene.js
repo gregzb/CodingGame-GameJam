@@ -22,7 +22,7 @@ class ResourceLoaderScene extends Phaser.Scene {
         this.load.on('complete', () => {
             // prepare all animations, defined in a separate file
             progress.destroy();
-            this.scene.start('EditorScene');
+            this.scene.start('MainMenuScene');
         });
 
         // Tilemap with a lot of objects and tile-properties tricks
@@ -41,8 +41,14 @@ class ResourceLoaderScene extends Phaser.Scene {
         this.load.atlas('fullscreenButtons', 'assets/spritesheets/fullscreenButtons/spritesheet.png', 'assets/spritesheets/fullscreenButtons/spritesheet.json');
 
         this.load.image('editorUI', 'assets/images/EditorUI.png');
+        this.load.image('menuBackground', 'assets/images/MenuBackground.png');
+
+        this.load.image('titleImage', 'assets/images/Stratagem.png');
 
         this.load.bitmapFont('default', 'assets/fonts/font0/font0.png', 'assets/fonts/font0/font0.fnt');
+
+        this.load.image('menuButton', 'assets/images/buttons/MenuButton.png');
+        this.load.image('backButton', 'assets/images/buttons/BackButton.png');
 
         this.load.image('movementButton', 'assets/images/buttons/Movement.png');
         this.load.image('clockButton', 'assets/images/buttons/Clock.png');

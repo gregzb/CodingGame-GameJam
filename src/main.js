@@ -4,6 +4,7 @@ import ResourceLoaderScene from './scenes/ResourceLoaderScene';
 import GameScene from './scenes/GameScene';
 import EditorScene from './scenes/EditorScene';
 import GameUIScene from './scenes/GameUIScene';
+import MainMenuScene from './scenes/MainMenuScene';
 
 const config = {
     // For more settings see <https://github.com/photonstorm/phaser/blob/master/src/boot/Config.js>
@@ -16,6 +17,7 @@ const config = {
     // scale: {
     //     mode: Phaser.Scale.ScaleModes.FIT
     // },
+    preserveDrawingBuffer: true,
     physics: {
         default: 'arcade',
         arcade: {
@@ -30,6 +32,7 @@ const config = {
     },
     scene: [
         ResourceLoaderScene,
+        MainMenuScene,
         GameScene,
         EditorScene,
         GameUIScene
@@ -37,3 +40,4 @@ const config = {
 };
 
 const game = new Phaser.Game(config); // eslint-disable-line no-unused-vars
+game.preserveDrawingBuffer = true;

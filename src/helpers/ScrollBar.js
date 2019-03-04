@@ -81,6 +81,11 @@ export default class ScrollBar extends Phaser.GameObjects.Graphics {
         //this.scene.input.setDraggable(this);
     }
 
+    setVisible(visible) {
+        super.setVisible(visible);
+        this.scrollPart.setVisible(visible);
+    }
+
     setSize(newSize) {
         this.size = Phaser.Math.Clamp(newSize, 0, 1);
         this.hitArea.height = (this.data.height - 8) * this.size;
