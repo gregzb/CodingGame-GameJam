@@ -32,7 +32,7 @@ class EditorScene extends Phaser.Scene {
         this.zoom = 1;
 
         this.gameScene = this.scene.launch("GameScene", config);
-        this.gameUIScene = this.scene.launch("GameUIScene");
+        this.gameUIScene = this.scene.launch("GameUIScene", config);
         this.cam = this.cameras.main;
 
         this.cam.roundPixels = true;

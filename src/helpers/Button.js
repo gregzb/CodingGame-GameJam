@@ -14,6 +14,13 @@ export default class Button extends Phaser.GameObjects.Image {
 
         this.masked = config.masked | false;
 
+        // if (config.locked === undefined) {
+        //     this.locked = false;
+        // } else {
+        //     this.locked = config.locked;
+        // }
+        this.locked = config.locked | false;
+
         this.startX = this.x;
         this.startY = this.y;
 
@@ -64,6 +71,13 @@ export default class Button extends Phaser.GameObjects.Image {
             this.setTint(0xcfcfcf);
         } else {
             this.setTint(0xffffff);
+        }
+
+        if (this.locked) {
+            this.setTint(0x8c6767);
+            this.disableInteractive();
+        } else {
+            this.setInteractive();
         }
     }
 

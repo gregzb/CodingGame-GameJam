@@ -1,6 +1,6 @@
-import Phaser from 'phaser';
-import Player from '../sprites/Player';
-import AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.min.js';
+import Phaser from "phaser";
+import Player from "../sprites/Player";
+import AnimatedTiles from "phaser-animated-tiles/dist/AnimatedTiles.min.js";
 
 export default class Level {
     constructor(scene, data) {
@@ -9,20 +9,43 @@ export default class Level {
         //data may include key, tilesetImageKey, tileSetKey
         this.data = data;
 
-        this.scene.load.scenePlugin('animatedTiles', AnimatedTiles, 'animatedTiles', 'animatedTiles');
+        this.scene.load.scenePlugin(
+            "animatedTiles",
+            AnimatedTiles,
+            "animatedTiles",
+            "animatedTiles"
+        );
+
+        this.scene.registry.set("levelRef", this);
 
         //this.startTicks = 0;
         this.currentTicks = 0;
     }
 
+    getScore() {
+        return 1000;
+    }
+
     init(config) {
+        this.level = config.level;
+
         this.map = this.scene.make.tilemap({
-            key: 'map' + config.level
+            key: "map" + config.level
         });
-        this.tileset = this.map.addTilesetImage('Tileset', 'tiles');
-        this.winset = this.map.addTilesetImage('spritesheet', 'win');
-        this.groundLayer = this.map.createStaticLayer('Land', this.tileset, 0, 0);
-        this.otherLayer = this.map.createDynamicLayer('Goal', this.winset, 0, 0);
+        this.tileset = this.map.addTilesetImage("Tileset", "tiles");
+        this.winset = this.map.addTilesetImage("spritesheet", "win");
+        this.groundLayer = this.map.createStaticLayer(
+            "Land",
+            this.tileset,
+            0,
+            0
+        );
+        this.otherLayer = this.map.createDynamicLayer(
+            "Goal",
+            this.winset,
+            0,
+            0
+        );
 
         //this.objectLayer = this.map.getObjectLayer('enemies');
 
@@ -40,45 +63,93 @@ export default class Level {
         this.scene.physics.world.bounds.y -= 100;
 
         this.keys = {
-            jump: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-            jump2: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+            jump: this.scene.input.keyboard.addKey(
+                Phaser.Input.Keyboard.KeyCodes.W
+            ),
+            jump2: this.scene.input.keyboard.addKey(
+                Phaser.Input.Keyboard.KeyCodes.SPACE
+            ),
             //fire: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
-            left: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-            right: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-            down: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
+            left: this.scene.input.keyboard.addKey(
+                Phaser.Input.Keyboard.KeyCodes.A
+            ),
+            right: this.scene.input.keyboard.addKey(
+                Phaser.Input.Keyboard.KeyCodes.D
+            ),
+            down: this.scene.input.keyboard.addKey(
+                Phaser.Input.Keyboard.KeyCodes.S
+            )
         };
 
-        this.playerSprite = new Player({ scene: this.scene, x: 0, y: 0, texture: 'player', frame: 'MortMortSprite-1.png' });
+        this.playerSprite = new Player({
+            scene: this.scene,
+            x: 0,
+            y: 0,
+            texture: "player",
+            frame: "MortMortSprite-1.png"
+        });
 
         let playerAnimations = {
-            idle: this.scene.anims.generateFrameNames('player', {
-                start: 1, end: 1, zeroPad: 0,
-                prefix: 'MortMortSprite-', suffix: '.png'
+            idle: this.scene.anims.generateFrameNames("player", {
+                start: 1,
+                end: 1,
+                zeroPad: 0,
+                prefix: "MortMortSprite-",
+                suffix: ".png"
             }),
-            jump: this.scene.anims.generateFrameNames('player', {
-                start: 2, end: 2, zeroPad: 0,
-                prefix: 'MortMortSprite-', suffix: '.png'
+            jump: this.scene.anims.generateFrameNames("player", {
+                start: 2,
+                end: 2,
+                zeroPad: 0,
+                prefix: "MortMortSprite-",
+                suffix: ".png"
             }),
-            dash: this.scene.anims.generateFrameNames('player', {
-                start: 3, end: 3, zeroPad: 0,
-                prefix: 'MortMortSprite-', suffix: '.png'
+            dash: this.scene.anims.generateFrameNames("player", {
+                start: 3,
+                end: 3,
+                zeroPad: 0,
+                prefix: "MortMortSprite-",
+                suffix: ".png"
             }),
-            run: this.scene.anims.generateFrameNames('player', {
-                start: 4, end: 9, zeroPad: 0,
-                prefix: 'MortMortSprite-', suffix: '.png'
+            run: this.scene.anims.generateFrameNames("player", {
+                start: 4,
+                end: 9,
+                zeroPad: 0,
+                prefix: "MortMortSprite-",
+                suffix: ".png"
             })
         };
-        this.scene.anims.create({ key: 'idle', frames: playerAnimations.idle, frameRate: 10, repeat: -1 });
-        this.scene.anims.create({ key: 'jump', frames: playerAnimations.jump, frameRate: 10, repeat: -1 });
-        this.scene.anims.create({ key: 'dash', frames: playerAnimations.dash, frameRate: 10, repeat: -1 });
-        this.scene.anims.create({ key: 'run', frames: playerAnimations.run, frameRate: 10, repeat: -1 });
-        this.playerSprite.anims.play('idle');
+        this.scene.anims.create({
+            key: "idle",
+            frames: playerAnimations.idle,
+            frameRate: 10,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: "jump",
+            frames: playerAnimations.jump,
+            frameRate: 10,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: "dash",
+            frames: playerAnimations.dash,
+            frameRate: 10,
+            repeat: -1
+        });
+        this.scene.anims.create({
+            key: "run",
+            frames: playerAnimations.run,
+            frameRate: 10,
+            repeat: -1
+        });
+        this.playerSprite.anims.play("idle");
 
         // This will watch the player and worldLayer every frame to check for collisions
         this.scene.physics.add.collider(this.playerSprite, this.groundLayer);
         //this.scene.physics.add.overlap(this.playerSprite, this.otherLayer, (object1, object2) => this.onWin(object1, object2));
 
-        this.objectLayer = this.map.getObjectLayer('levelInfo');
+        this.objectLayer = this.map.getObjectLayer("levelInfo");
         const objects = this.objectLayer.objects;
         objects.forEach(object => {
             if (object.name === "SpawnPoint") {
@@ -87,29 +158,50 @@ export default class Level {
                 this.playerSprite.startPosX = object.x;
                 this.playerSprite.startPosY = object.y;
             } else if (object.name === "GoalArea") {
-                const winZone = this.scene.add.zone(object.x, object.y, object.width, object.height).setOrigin(0, 0);
+                const winZone = this.scene.add
+                    .zone(object.x, object.y, object.width, object.height)
+                    .setOrigin(0, 0);
                 this.scene.physics.world.enable(winZone);
                 winZone.body.setAllowGravity(false);
 
-                this.scene.physics.add.overlap(this.playerSprite, winZone, (object1, object2) => this.onWin(object1, object2));
+                this.scene.physics.add.overlap(
+                    this.playerSprite,
+                    winZone,
+                    (object1, object2) => this.onWin(object1, object2)
+                );
             }
         });
 
         //this.scene.cam.centerOn(0, 0);
         this.scene.cam.startFollow(this.playerSprite, true, 0.25, 0.25);
 
-        this.startingBlock = this.scene.scene.get("EditorScene").blockManager.startBlock;
+        this.startingBlock = this.scene.scene.get(
+            "EditorScene"
+        ).blockManager.startBlock;
         this.currentBlock = this.startingBlock;
 
         this.executing = false;
         this.waitingTime = 0;
 
+        this.hasWon = false;
+
         //this.dashed = false;
     }
 
     onWin(object1, object2) {
-        console.log("Player has beaten this level.");
-        this.executing = false;
+        if (!this.hasWon) {
+            const unlockedLevels = this.scene.registry.get("unlockedLevels");
+            this.scene.registry.set("unlockedLevels", Math.max(this.level + 2, unlockedLevels));
+            this.executing = false;
+            this.playerSprite.input = {
+                right: false,
+                left: false,
+                jump: false
+            };
+            const gameUIScene = this.scene.scene.get("GameUIScene");
+            gameUIScene.setWinVisible(true);
+            this.hasWon = true;
+        }
     }
 
     update(time, delta) {
@@ -132,7 +224,9 @@ export default class Level {
 
                 let args = [];
                 if (this.currentBlock.inputField) {
-                    const inputNum = Number.parseFloat(this.currentBlock.inputField.inputText.text);
+                    const inputNum = Number.parseFloat(
+                        this.currentBlock.inputField.inputText.text
+                    );
                     if (Number.isFinite(inputNum)) {
                         args.push(inputNum);
                     } else {
@@ -152,7 +246,6 @@ export default class Level {
 
         this.playerSprite.updateSprite(this.keys, time, delta);
         //console.log("yeet");
-
 
         //this.playerSprite.changeDirection();
         //this.playerSprite.moveForward();
@@ -193,9 +286,7 @@ export default class Level {
         this.waitingTime = amount * 1000;
     }
 
-    doNothing() {
-
-    }
+    doNothing() {}
 
     executeInstructions() {
         this.stopInstructions();
@@ -211,13 +302,16 @@ export default class Level {
     }
 
     stopInstructions() {
+        const gameUIScene = this.scene.scene.get("GameUIScene");
+        gameUIScene.setWinVisible(false);
+        this.hasWon = false;
         this.executing = false;
         this.waitingTime = 500;
 
         this.playerSprite.input = {
             right: false,
             left: false,
-            jump: false,
+            jump: false
         };
 
         this.playerSprite.x = this.playerSprite.startPosX;
@@ -233,7 +327,5 @@ export default class Level {
         this.scene.cam.zoomTo(this.scene.initialZoom, 500, "Power2", true);
     }
 
-    clearResources() {
-
-    }
+    clearResources() {}
 }

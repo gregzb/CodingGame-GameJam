@@ -22,12 +22,16 @@ class ResourceLoaderScene extends Phaser.Scene {
         this.load.on('complete', () => {
             // prepare all animations, defined in a separate file
             progress.destroy();
+            this.registry.set('unlockedLevels', 1);
             this.scene.start('MainMenuScene');
         });
 
         // Tilemap with a lot of objects and tile-properties tricks
-        this.load.tilemapTiledJSON('map0', 'assets/tilemaps/levels/level1.json');
-        this.load.tilemapTiledJSON('map1', 'assets/tilemaps/levels/level2.json');
+        for (let i = 0; i < 10; i++) {
+            this.load.tilemapTiledJSON('map' + i, 'assets/tilemaps/levels/level' + (i + 1) + '.json');
+        }
+        // this.load.tilemapTiledJSON('map0', 'assets/tilemaps/levels/level1.json');
+        // this.load.tilemapTiledJSON('map1', 'assets/tilemaps/levels/level2.json');
 
         /*this.load.spritesheet('tiles', 'assets/tilemaps/map2/Tileset.png', {
             frameWidth: 16,
@@ -62,6 +66,9 @@ class ResourceLoaderScene extends Phaser.Scene {
         this.load.image('movementBlock', 'assets/images/MovementBlock1Input.png');
         this.load.image('startBlock', 'assets/images/StartBlock.png');
         this.load.image('textCursor', 'assets/images/Cursor.png');
+
+        this.load.image('bigMessageBox', 'assets/images/BigMessageBox.png');
+        this.load.image('smallMessageBox', 'assets/images/SmallerMessageBox.png');
     }
 }
 

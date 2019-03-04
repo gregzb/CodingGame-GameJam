@@ -4,13 +4,13 @@ import TextButton from '../helpers/TextButton.js';
 import ScrollBar from '../helpers/ScrollBar.js';
 
 class MainMenuScene extends Phaser.Scene {
-    constructor(test) {
+    constructor(config) {
         super({
             key: 'MainMenuScene'
         });
     }
 
-    create() {
+    create(config) {
         this.cam = this.cameras.main;
 
         this.currentState = "main";
@@ -73,6 +73,8 @@ class MainMenuScene extends Phaser.Scene {
             }).setOrigin(0, 1).setScale(5)
         ];
 
+        const unlockedLevels = this.registry.get('unlockedLevels');
+
         for (let i = 0; i < 10; i++) {
             this.levelButtons.push(new TextButton({
                 scene: this, 
@@ -85,6 +87,7 @@ class MainMenuScene extends Phaser.Scene {
                 text: "Level " + (i + 1),
                 textSize: 85,
                 masked: true,
+                locked: !(i < unlockedLevels),
                 buttonPressed: (button) => this.buttonPressed(button)
             }).setOrigin(0.5, 0).setScale(6).setMask(this.levelMask));
         }

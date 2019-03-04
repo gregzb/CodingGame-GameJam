@@ -2,7 +2,6 @@ import AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.min.js';
 import Phaser from 'phaser';
 import Player from '../sprites/Player';
 import Level from '../helpers/Level';
-import { throws } from 'assert';
 
 class GameScene extends Phaser.Scene {
     constructor(config) {

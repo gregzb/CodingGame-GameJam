@@ -11,7 +11,7 @@ export default class TextButton extends Button{
         this.offsetX = config.offsetX;
         this.offsetY = config.offsetY;
 
-        this.text = this.scene.add.bitmapText(this.x + this.offsetX, this.y + this.offsetY, "default", config.text, config.textSize).setOrigin(0.5, 0);
+        this.text = this.scene.add.bitmapText(this.x + this.offsetX, this.y + this.offsetY, "default", config.text, config.textSize, 1).setOrigin(0.5, 0);
         //super.setVisible(false);
     }
 
