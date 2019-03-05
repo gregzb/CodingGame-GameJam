@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import InputField from "./InputField.js";
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
 
 export default class CodeBlock extends Phaser.GameObjects.Image {
     static get nextID() {
@@ -11,6 +12,10 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
 
     constructor(scene, data, shapes, manager) {
         super(scene, data.defaultX, data.defaultY, shapes[data.shape].texture);
+
+        this.blockData = data;
+        this.blockShapes = shapes;
+
         this.manager = manager;
         //console.log(this.manager);
         this.scene = scene;
@@ -30,6 +35,12 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         this.suffix = data.suffix;
         this.defaultPos = new Phaser.Math.Vector2(data.defaultX, data.defaultY);
         this.setPosition(this.defaultPos.x, this.defaultPos.y);
+
+        if (data.cost === undefined) {
+            this.cost = 1;
+        } else {
+            this.cost = data.cost;
+        }
 
         this.shape = shapes[data.shape];
 
@@ -198,6 +209,7 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
         //May overlap many times, stop after the first one?
         this.x = object2.x;
         this.y = object2.y;
+        this.scene.sound.play('pop2', {volume: 0.2});
         this.setOnBoard(true, object2.block);
         if (!this.wasOnBoard) {
             this.scene.blockManager.boardBlocks.push(this);
@@ -206,6 +218,7 @@ export default class CodeBlock extends Phaser.GameObjects.Image {
     }
 
     onDragStart(pointer, dragX, dragY) {
+        //console.log("scene", this.scene);
         if (this.onBoard) {
             this.setOnBoard(false, null);
             this.wasOnBoard = true;

@@ -11,8 +11,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
         this.body.setCollideWorldBounds(true);
 
-        this.body.setSize(16, 18);
-        this.body.offset.set(4, 6);
+        this.body.setSize(16, 17);
+        this.body.offset.set(4, 7);
 
         this.acceleration = 400;
 
@@ -40,6 +40,9 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.movingRight = true;
 
         this.tempSprites = [];
+        this.prevVelocity = this.body.velocity;
+
+        this.footstepSound = this.scene.sound.add('footstep', {volume: 0.15, loop: true, rate: 1.4});
     }
 
     updateSprite(keys, time, delta) {
@@ -68,7 +71,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.onGround = this.body.blocked.down;
 
         if (this.body.maxVelocity.x > 150) {
-            this.body.maxVelocity.x *= 0.75;
+            this.body.maxVelocity.x *= 0.75 * delta * 0.06;
         } else {
             this.body.maxVelocity.x = 150;
         }
@@ -86,16 +89,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
             }
             this.body.setAccelerationX(0);
         }
-
-        // //1 is an arbitrary num greater than 0
-        // if (Math.abs(this.body.velocity.x) > 1) {
-        //     // if (this.running === false && !this.jumping) {
-        //     //     //this.anims.play("run");
-        //     // }
-        //     this.running = true;
-        // } else {
-        //     this.running = false;
-        // }
 
         this.running = Math.abs(this.body.velocity.x) > 1;
 
@@ -132,14 +125,12 @@ export default class Player extends Phaser.GameObjects.Sprite {
             this.anims.play("dash");
         }
 
-        /*if (this.nextFlipX != this.flipX) {
-            this.flipX = this.nextFlipX;
-        } else {
-            this.nextFlipX =
-                this.body.velocity.x === 0
-                    ? this.prevFlipX
-                    : this.body.velocity.x < 0;
-        }*/
+        if (this.body.velocity.x >= 10 && this.body.velocity.x <= 150 && (this.prevVelocity.x < 10 || this.prevVelocity.x > 150)) {
+            console.log('fucl');
+            this.footstepSound.play();
+        } else if (this.body.velocity.x < 10 || this.body.velocity.x > 150) {
+            this.footstepSound.stop();
+        }
 
         this.flipX = this.body.velocity.x === 0 ? this.prevFlipX : this.body.velocity.x < 0;
 
@@ -147,6 +138,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.prevGround = this.onGround;
         this.prevFlipX = this.flipX;
         this.prevInput = Object.assign({}, this.input);
+
+        this.prevVelocity = Object.assign({}, this.body.velocity);
 
         //Game control part
         //this.prevInput.jump = false;
@@ -189,7 +182,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
     changeDirection() {
         this.movingRight = !this.movingRight;
-        if (this.isMovingForward) {
+        if (this.isMovingForward()) {
             this.input.right = this.movingRight;
             this.input.left = !this.movingRight;
         }
@@ -203,10 +196,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
     dash() {
         this.body.maxVelocity.x = 1500;
-        this.body.velocity.x = 1500 * (this.flipX ? -1 : 1);
-        // this.temp = new Player({ scene: this.scene, x: this.x, y: this.y, texture: 'player', frame: 'MortMortSprite-1.png' });
-        // this.scene.physics.world.disable(this.temp);
-        // this.temp.setAlpha(0.5);
+        this.body.velocity.x = 1500 * (this.movingRight ? 1 : -1);
     }
 
     doNothing() {}

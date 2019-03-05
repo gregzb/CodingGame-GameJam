@@ -61,6 +61,12 @@
  "nextlayerid":4,
  "nextobjectid":8,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"maxTime",
+         "type":"int",
+         "value":10
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.2.2",
  "tileheight":16,

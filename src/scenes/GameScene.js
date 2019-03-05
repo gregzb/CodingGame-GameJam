@@ -16,7 +16,7 @@ class GameScene extends Phaser.Scene {
 
     create(config) {
 
-        this.physics.world.TILE_BIAS = 32;
+        this.physics.world.TILE_BIAS = 16;
 
         //this.zoom = 3.5;
         this.initialZoom = 2.0;

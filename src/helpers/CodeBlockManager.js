@@ -45,15 +45,23 @@ export default class CodeBlockManager {
 
     update(time, delta) {
         this.startBlock.update(time, delta);
+        //console.log(this.startBlock);
         for (const codeBlock of this.currentBlocks) {
             codeBlock.update(time, delta);
         }
         for (const codeBlock of this.boardBlocks) {
             codeBlock.update(time, delta);
         }
+        //console.log(this.boardBlocks);
     }
 
     allBlocks() {
         return this.currentBlocks.concat(this.boardBlocks);
+    }
+
+    getCost() {
+        return this.boardBlocks.reduce((acc, cur) => {
+            return acc * cur.cost;
+        }, 1);
     }
 }

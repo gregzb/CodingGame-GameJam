@@ -36,7 +36,8 @@
                 "prefix": "Move forward",
                 "defaultX": 90,
                 "defaultY": 80,
-                "command": "moveForward"
+                "command": "moveForward",
+                "cost": 0.95
             },
             "stopMovingForward": {
                 "name": "stopMovingForward",
@@ -46,7 +47,8 @@
                 "prefix": "Stop moving",
                 "defaultX": 90,
                 "defaultY": 190,
-                "command": "stopMoving"
+                "command": "stopMoving",
+                "cost": 0.95
             },
             "jump": {
                 "name": "jump",
@@ -56,7 +58,8 @@
                 "prefix": "Jump",
                 "defaultX": 90,
                 "defaultY": 300,
-                "command": "jump"
+                "command": "jump",
+                "cost": 0.9
             },
             "changeDirection": {
                 "name": "changeDirection",
@@ -66,7 +69,8 @@
                 "prefix": "Turn Around",
                 "defaultX": 90,
                 "defaultY": 410,
-                "command": "changeDirection"
+                "command": "changeDirection",
+                "cost": 0.96
             }
         },
         "Control": {
@@ -80,30 +84,12 @@
                     "suffix": "seconds",
                     "defaultX": 90,
                     "defaultY": 80,
-                    "command": "delay"
+                    "command": "delay",
+                    "cost": 0.95
                 }
         },
         "Action": {
-            "pickUpItem": {
-                "name": "pickUpItem",
-                "shape": "zeroInput",
-                "type": "Action",
-                "description": "The player will pick up the item next to the character.",
-                "prefix": "Pick Up Item",
-                "defaultX": 90,
-                "defaultY": 80,
-                "command": "doNothing"
-            }, 
-            "throwItem": {
-                "name": "throwItem",
-                "shape": "zeroInput",
-                "type": "Action",
-                "description": "The player will throw the currently held item.",
-                "prefix": "Throw Item",
-                "defaultX": 90,
-                "defaultY": 190,
-                "command": "doNothing"
-            }
+            
         },
         "Attack": {
             "fireball": {
@@ -114,7 +100,8 @@
                 "prefix": "Shoot Fireball",
                 "defaultX": 90,
                 "defaultY": 80,
-                "command": "doNothing"
+                "command": "fireball",
+                "cost": 0.85
             },
             "dash": {
                 "name": "dash",
@@ -124,7 +111,8 @@
                 "prefix": "Dash",
                 "defaultX": 90,
                 "defaultY": 190,
-                "command": "dash"
+                "command": "dash",
+                "cost": 0.8
             }
         },
         "Misc": {
@@ -138,7 +126,8 @@
                     "defaultX": 320,
                     "defaultY": 10,
                     "onBoard": true,
-                    "command": "doNothing"
+                    "command": "doNothing",
+                    "cost": 1
                 }
         }
     }

@@ -51,7 +51,7 @@ export default class InputField extends Phaser.GameObjects.Zone {
                 }
             }
             if (this.pointerOver) {
-                this.scene.registry.get('bringUpKeyboard')();
+                //this.scene.registry.get('bringUpKeyboard')();
                 this.editing = true;
             }
             event.stopPropagation();

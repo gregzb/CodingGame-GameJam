@@ -27,7 +27,7 @@ class ResourceLoaderScene extends Phaser.Scene {
         });
 
         // Tilemap with a lot of objects and tile-properties tricks
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 7; i++) {
             this.load.tilemapTiledJSON('map' + i, 'assets/tilemaps/levels/level' + (i + 1) + '.json');
         }
         // this.load.tilemapTiledJSON('map0', 'assets/tilemaps/levels/level1.json');
@@ -60,6 +60,8 @@ class ResourceLoaderScene extends Phaser.Scene {
         this.load.image('actionButton', 'assets/images/buttons/Action.png');
         this.load.image('attackButton', 'assets/images/buttons/Attack.png');
 
+        this.load.image('fireball', 'assets/images/Fireball.png');
+
         this.load.image('greenFlag', 'assets/images/buttons/GreenFlag.png');
         this.load.image('stopSign', 'assets/images/buttons/StopSign.png');
 
@@ -69,6 +71,15 @@ class ResourceLoaderScene extends Phaser.Scene {
 
         this.load.image('bigMessageBox', 'assets/images/BigMessageBox.png');
         this.load.image('smallMessageBox', 'assets/images/SmallerMessageBox.png');
+
+        this.load.image('spike', 'assets/images/Spike.png');
+
+        this.load.audio('bgmusic', 'assets/audio/song.mp3');
+        this.load.audio('pop1', 'assets/audio/pop1.mp3');
+        this.load.audio('pop2', 'assets/audio/pop2.mp3');
+        this.load.audio('dash', 'assets/audio/dash.mp3');
+        this.load.audio('fireball', 'assets/audio/fireball.mp3');
+        this.load.audio('footstep', 'assets/audio/footstep.mp3');
     }
 }
 

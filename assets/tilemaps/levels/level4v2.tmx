@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="15" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="4">
+ <properties>
+  <property name="maxTime" type="int" value="50"/>
+ </properties>
+ <tileset firstgid="1" name="Tileset" tilewidth="16" tileheight="16" tilecount="48" columns="8">
+  <image source="Tileset.png" width="128" height="96"/>
+ </tileset>
+ <tileset firstgid="49" name="spritesheet" tilewidth="16" tileheight="16" tilecount="12" columns="4">
+  <image source="spritesheet.png" width="64" height="48"/>
+  <tile id="0">
+   <animation>
+    <frame tileid="0" duration="80"/>
+    <frame tileid="1" duration="80"/>
+    <frame tileid="2" duration="80"/>
+    <frame tileid="3" duration="80"/>
+   </animation>
+  </tile>
+  <tile id="4">
+   <animation>
+    <frame tileid="4" duration="80"/>
+    <frame tileid="5" duration="80"/>
+    <frame tileid="6" duration="80"/>
+    <frame tileid="7" duration="80"/>
+   </animation>
+  </tile>
+  <tile id="8">
+   <animation>
+    <frame tileid="8" duration="80"/>
+    <frame tileid="9" duration="80"/>
+    <frame tileid="10" duration="80"/>
+    <frame tileid="11" duration="80"/>
+   </animation>
+  </tile>
+ </tileset>
+ <layer id="1" name="Land" width="15" height="25">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,25,26,26,26,27,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,25,26,27,0,0,0,0,
+25,26,27,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,25,26,26,26,26,26,26,27,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+25,26,26,26,27,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,25,26,26,27,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,25,26,26,26,27,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,25,26,26,27,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,1,2,2,2,3,0,0,0,0,0,0,0,0,0,
+0,17,18,18,18,19,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="2" name="Goal" width="15" height="25">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,53,49,57,0,0,0,0,0,0,0,0,
+0,0,0,0,53,49,57,0,0,0,0,0,0,0,0,
+0,0,0,0,53,49,57,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="3" name="levelInfo">
+  <object id="1" name="SpawnPoint" x="16" y="128" width="16" height="16"/>
+  <object id="2" name="GoalArea" x="66" y="64" width="44" height="48"/>
+  <object id="3" name="RespawnArea" x="0" y="368" width="240" height="32"/>
+ </objectgroup>
+</map>

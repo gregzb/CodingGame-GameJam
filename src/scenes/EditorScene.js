@@ -51,17 +51,39 @@ class EditorScene extends Phaser.Scene {
         //this.addNewBlock();
         this.blockManager = new CodeBlockManager(this);
 
-        // this.fullscreenButton = new Button({
-        //     scene: this,
-        //     x: 11,
-        //     y: 538,
-        //     texture: "fullscreenButtons",
-        //     frame: 0,
-        //     canSetActive: false,
-        //     buttonPressed: button => this.buttonPressed(button)
-        // })
-        //     .setOrigin(0, 0)
-        //     .setScale(7);
+        const savedBoardBlocks = this.registry.get('blocksLevel' + config.level);
+        //console.log(savedBoardBlocks);
+        if (savedBoardBlocks) {
+            console.log(savedBoardBlocks);
+            savedBoardBlocks.forEach((block, index) => {
+                const newCodeBlock = new CodeBlock(this, block.blockData, block.blockShapes, this.blockManager).setOrigin(0,0).setScale(6);
+
+                if (index === 0) {
+                    newCodeBlock.previousBlock = this.blockManager.startBlock;
+                } else {
+                    newCodeBlock.previousBlock = this.blockManager.boardBlocks[index - 1];
+                }
+                newCodeBlock.onBoard = block.onBoard;
+                newCodeBlock.wasOnBoard = block.wasOnBoard;
+
+                newCodeBlock.x = block.x;
+                newCodeBlock.y = block.y;
+                
+                this.blockManager.boardBlocks.push(newCodeBlock);
+            });
+
+            this.blockManager.boardBlocks.forEach((block, index) => {
+                if (index === this.blockManager.boardBlocks.length - 1) {
+                    block.nextBlock = null;
+                    block.enableSnapZone();
+                } else {
+                    block.nextBlock = this.blockManager.boardBlocks[index+1];
+                }
+            });
+
+            this.blockManager.startBlock.nextBlock = this.blockManager.boardBlocks[0];
+        }
+
 
 
 
@@ -94,32 +116,9 @@ class EditorScene extends Phaser.Scene {
             buttonPressed: (button) => this.buttonPressed(button)
         }).setOrigin(0, 1).setScale(5);
 
-        
-
-        //this.addNewBlock();
-        //this.codeBlock = new CodeBlock(this, blockData.blockData.Movement.moveForwardTimed, blockData.blockShapes).setOrigin(0,0).setScale(6);
-        //this.codeBlock2 = new CodeBlock(this, blockData.blockData.Misc.startGame, blockData.blockShapes).setOrigin(0,0).setScale(6);
-
-        // this.actionButton = new Button({scene: this, x: 227, y: 227, texture: 'actionButton'});
-        // this.actionButton.setOrigin(0, 0);
-
-        // // this.actionButton = this.add.image(227, 227, 'actionButton').setOrigin(0,0).setInteractive();
-        // // this.actionButton.on('pointerdown', () => this.buttonClicked('actionButton') );
-
-        // this.clockButton = this.add.image(227, 227+19, 'clockButton').setOrigin(0,0).setInteractive();
-        // this.clockButton.on('pointerdown', () => this.buttonClicked('clockButton') );
-        /*this.text2 = this.add.bitmapText(227, 227, 'default', 'Yeet', 72);
-        this.text2.setTintFill(0x503030);*/
-        //this.text = this.add.bitmapText(225, 225, 'default', 'Yeet', 72);
-        //this.text.setTintFill(0xff0000);
-        //this.text.setTintFill(0xff0000);
-
-        //this.cam.startFollow(this.background);
-
         this.input.on("pointerdown", () => {
             for (const codeBlock of this.blockManager.allBlocks()) {
                 if (codeBlock.inputField) {
-                    this.registry.get("removeKeyboard")();
                     codeBlock.inputField.editing = false;
                 }
             }
@@ -128,27 +127,11 @@ class EditorScene extends Phaser.Scene {
         this.registry.set("divider", 600);
         this.registry.set("editorActive", true);
 
-        this.registry.set("bringUpKeyboard", () => {
-            document.getElementById("dummy").focus();
-        });
-
-        this.registry.set("removeKeyboard", () => {
-            document.getElementById("dummy").value = "";
-            document.getElementById("dummy").blur();
-        });
-
-        //this.scale.fullscreenTarget = this.game.canvas;
     }
 
     buttonPressed(button) {
-        if (button.texture.key === "fullscreenButtons") {
-            button.setFrame(
-                button.frame.name === "FullscreenButton.png"
-                    ? "WindowButton.png"
-                    : "FullscreenButton.png"
-            );
-            this.scale.toggleFullscreen();
-        } else if (button.texture.key === "backButton") {
+        this.sound.play('pop1', {volume: 0.2});
+        if (button.texture.key === "backButton") {
             this.scene.stop("GameUIScene");
             this.scene.stop("GameScene");
             this.scene.start("MainMenuScene");
@@ -162,13 +145,6 @@ class EditorScene extends Phaser.Scene {
 
         const numBoardBlocks = this.blockManager.boardBlocks.length + 1;
         this.scrollBar.setSize(1 - Phaser.Math.Clamp((numBoardBlocks-6) / numBoardBlocks, 0, 1));
-        // console.log((numBoardBlocks-6) / numBoardBlocks);
-        // console.log(1 - Phaser.Math.Clamp((numBoardBlocks-6) / numBoardBlocks, 0, 1));
-
-        //this.codeBlock.update(time, delta);
-        // for (const codeBlock of this.blocks) {
-        //     codeBlock.update(time, delta);
-        // }
         this.blockManager.update(time, delta);
         if (this.registry.get("divider") > 599) {
             this.registry.set("editorActive", true);
@@ -191,16 +167,11 @@ class EditorScene extends Phaser.Scene {
         ) {
             this.scaleSize(true);
         }
-        //console.log(this.cam.getWorldPoint(0,0));
-        //console.log(this.registry.get('divider'));
     }
 
     scaleSize(large) {
         let cam = this.cam;
         if (large) {
-            //this.cam.setViewport(0, 0, this.registry.get('divider'), 600);
-            //this.background.position
-            //this.tweens.existing(this.tweenToEditor);
             let tweenToEditor = this.tweens.add({
                 targets: this.registry.list,
                 props: {
