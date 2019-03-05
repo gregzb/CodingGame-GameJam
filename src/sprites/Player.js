@@ -126,7 +126,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
         }
 
         if (this.body.velocity.x >= 10 && this.body.velocity.x <= 150 && (this.prevVelocity.x < 10 || this.prevVelocity.x > 150)) {
-            console.log('fucl');
             this.footstepSound.play();
         } else if (this.body.velocity.x < 10 || this.body.velocity.x > 150) {
             this.footstepSound.stop();
